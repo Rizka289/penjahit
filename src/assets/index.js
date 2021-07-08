@@ -1,3 +1,3 @@
-import welcomeAuth from './image/logo.jpg';
+import logo from './image/logo.jpg';
 
-export {welcomeAuth};
+export {logo};

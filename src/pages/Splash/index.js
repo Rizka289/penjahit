@@ -1,5 +1,7 @@
 import React, {useEffect} from 'react';
-import {View, Text} from 'react-native';
+import {View, Image} from 'react-native';
+import { logo } from '../../assets';
+import styles from '../../utils/styles';
 
 const Splash = ({navigation}) => {
   useEffect(() => {
@@ -8,8 +10,8 @@ const Splash = ({navigation}) => {
     }, 2000);
   });
   return (
-    <View>
-      <Text>Splash Screen</Text>
+    <View style={styles.wrapper.page}>
+      <Image source={logo} style={styles.wrapper.ilustration} />
     </View>
   );
 };

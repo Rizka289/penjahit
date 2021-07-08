@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import {Button} from '../../components';
-import {colors} from '../../utils';
+import {Button} from '../..';
+import {colors} from '../../../utils';
 
 const ActionBttuon = ({desc, title, onPress}) => {
   return (

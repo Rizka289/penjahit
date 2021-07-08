@@ -1,9 +1,10 @@
 import React from 'react';
 import {View, Text, Image} from 'react-native';
 // import {color} from 'react-native-reanimated';
-import {welcomeAuth} from '../../assets';
-import {colors} from '../../utils';
-import ActionBttuon from './ActionButton';
+import {logo} from '../../assets';
+import ActionBttuon from '../../components/atoms/Button/ActionButton';
+import styles from '../../utils/styles';
+
 
 const WelcomeAuth = ({navigation}) => {
   const handleGoTo = screen => {
@@ -11,7 +12,7 @@ const WelcomeAuth = ({navigation}) => {
   };
   return (
     <View style={styles.wrapper.page}>
-      <Image source={welcomeAuth} style={styles.wrapper.ilustration} />
+      <Image source={logo} style={styles.wrapper.ilustration} />
       <Text style={styles.text.welcome}>Selamat Datang di Consuo Jahit</Text>
       <ActionBttuon
         desc="Silahkan masuk, jika anda sudah memiliki akun"
@@ -26,27 +27,5 @@ const WelcomeAuth = ({navigation}) => {
     </View>
   );
 };
-const styles = {
-  wrapper: {
-    page: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'white',
-      flex: 1,
-    },
-    ilustration: {
-      width: 219,
-      height: 119,
-      marginBottom: 7,
-    },
-  },
-  text: {
-    welcome: {
-      fontSize: 15,
-      fontWeight: 'bold',
-      color: colors.default,
-      marginBottom: 76,
-    },
-  },
-};
+
 export default WelcomeAuth;
