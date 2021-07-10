@@ -16,6 +16,7 @@ const Login = ({navigation}) => {
   
   const sendData = async () => {
     const results = await Auth.login(email, password);
+    console.log(results);
     if(!results.success)
       setMessage(results.message);
     else

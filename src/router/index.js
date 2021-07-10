@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 const Router = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen options={{}} name="Order" component={HalamanPesan} />
+      {/* <Stack.Screen options={{}} name="Order" component={HalamanPesan} /> */}
       <Stack.Screen options={{ headerShown: false}} name="Splash" component={Splash} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />

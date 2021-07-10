@@ -12,7 +12,12 @@ const Splash = ({navigation}) => {
       if(token == '')
         navigation.replace('WelcomeAuth');
       else{
-        navigation.replace("Order")
+        const data = jwt_decode(token);
+        if(Date.now() >= Date.parse(data.login_at))
+          navigation.replace('WelcomeAuth');
+        else
+          navigation.replace('WelcomeAuth');
+
       }
     }, 2000);
   });
