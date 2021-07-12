@@ -79,12 +79,19 @@ const Register = ({ navigation }) => {
         <Text style={styles.text.welcome}>Daftar</Text>
       </View>
       <View style={message != true ? {} : local_styles.hide}>
+      <View style={styles.form.formGroup}>
+          <Text style={styles.form.label}>Daftar Sebagai</Text>
+          <Picker selectedValue={body.kelamin} onValueChange={v => setBody({ ...body, role: v })} style={styles.form.formControl} >
+            <Picker.Item label="Pelanggan" value="pelanggan" />
+            <Picker.Item label="Penjual" value="penjual" />
+          </Picker>
+        </View>
         <View style={styles.form.formGroup}>
           <Text style={styles.form.label}>Nama Lengkap</Text>
           <TextInput defaultValue={body.nama_lengkap} onChangeText={v => setBody({ ...body, nama_lengkap: v })} style={styles.form.formControl} />
         </View>
         <View style={styles.form.formGroup}>
-          <Text style={styles.form.label}>Username</Text>
+          <Text style={styles.form.label}>{body.role == 'pelanggan' ? "Username" : "Nama Toko"}</Text>
           <TextInput defaultValue={body.username} onChangeText={v => setBody({ ...body, username: v })} style={styles.form.formControl} />
         </View>
         <View style={styles.form.formGroup}>
@@ -143,14 +150,7 @@ const Register = ({ navigation }) => {
         <View style={styles.form.formGroup}>
           <Text style={styles.form.label}>Alamat Lengkap</Text>
           <TextInput defaultValue={body.alamat} onChangeText={v => setBody({ ...body, alamat: v })} style={styles.form.formControl} />
-        </View>
-        <View style={styles.form.formGroup}>
-          <Text style={styles.form.label}>Role</Text>
-          <Picker selectedValue={body.kelamin} onValueChange={v => setBody({ ...body, role: v })} style={styles.form.formControl} >
-            <Picker.Item label="Pelanggan" value="pelanggan" />
-            <Picker.Item label="Penjual" value="penjual" />
-          </Picker>
-        </View>
+        </View>       
         <Text style={message != null && message != true ? local_styles.show : local_styles.hide}>{message}</Text>
         <View style={{ marginHorizontal: '25%' }}>
           <ActionBttuon onPress={sendData} title="Daftar" />

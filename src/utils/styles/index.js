@@ -50,7 +50,7 @@ const styles = {
             marginBottom: 5,
         }
 
-    }
+    },
 };
 
 export default styles

@@ -16,7 +16,8 @@ const Splash = ({navigation}) => {
         if(Date.now() >= Date.parse(data.login_at))
           navigation.replace('WelcomeAuth');
         else
-          navigation.replace('WelcomeAuth');
+          navigation.replace(data.role.charAt(0).toUpperCase() + data.role.slice(1));
+        
 
       }
     }, 2000);

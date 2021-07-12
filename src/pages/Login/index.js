@@ -5,6 +5,7 @@ import styles from '../../utils/styles';
 import ActionBttuon from '../../components/atoms/Button/ActionButton';
 import Auth from '../../models/Auth';
 import { useState } from 'react';
+import jwtDecode from 'jwt-decode';
 
 const Login = ({navigation}) => {
   const [message, setMessage] = useState(null);
@@ -19,8 +20,10 @@ const Login = ({navigation}) => {
     console.log(results);
     if(!results.success)
       setMessage(results.message);
-    else
-      setMessage("")
+    else{
+      const data = await jwtDecode(results.message);
+      navigation.replace(data.role.charAt(0).toUpperCase() + data.role.slice(1));
+    }
   }
   return (
     <View style={{ backgroundColor: 'white', flex: 1}}>
