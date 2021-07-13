@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwtDecode from 'jwt-decode';
 const Auth = {
     login: async (email, password) => {
+        console.log("Body \n", {email: email, password: password});
+
         let output = await fetch('https://penjahit.kamscodelab.tech/login', {
             method: "POST",
             headers: {
@@ -16,6 +18,7 @@ const Auth = {
         })
             .then((response) => response.json())
             .then(async (json) => {
+                console.log("Result \n", json);
                 if (json.type == 'success')
                     await Auth.saveToken(json.message)
                 return {
@@ -81,7 +84,26 @@ const Auth = {
         } catch (error) {
             return null;
         }
-    }
-};
+    },
+    mustLogin: async (navigation) => {
+        const token = await Auth.loadToken();
+        if (token == '')
+            navigation.replace('WelcomeAuth');
+        else {
+            const data = jwtDecode(token);
+            if (Date.now() >= Date.parse(data.login_at))
+                navigation.replace('WelcomeAuth');
+
+        }
+    },
+    dontLogin: async (navigation) => {
+        const token = await Auth.loadToken();
+        if (token != '') {
+            const data = jwtDecode(token);
+            navigation.replace(data.role.charAt(0).toUpperCase() + data.role.slice(1));
+        }
+
+    },
+}
 
 export default Auth;

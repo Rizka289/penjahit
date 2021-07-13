@@ -4,6 +4,7 @@ import { logo } from '../../assets';
 import Auth from '../../models/Auth';
 import styles from '../../utils/styles';
 import jwt_decode from "jwt-decode"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Splash = ({navigation}) => {
   useEffect(() => {
@@ -13,8 +14,10 @@ const Splash = ({navigation}) => {
         navigation.replace('WelcomeAuth');
       else{
         const data = jwt_decode(token);
-        if(Date.now() >= Date.parse(data.login_at))
+        if(Date.now() >= Date.parse(data.login_at)){
+          AsyncStorage.removeItem('_token_');
           navigation.replace('WelcomeAuth');
+        }
         else
           navigation.replace(data.role.charAt(0).toUpperCase() + data.role.slice(1));
         

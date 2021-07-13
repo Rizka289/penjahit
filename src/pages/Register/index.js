@@ -8,6 +8,7 @@ import Auth from '../../models/Auth';
 import Uihelper from '../../models/Uihelper';
 import DatePicker from 'react-native-date-picker';
 import Select2 from "react-select2-native";
+import { colors } from '../../utils';
 
 
 const Register = ({ navigation }) => {
@@ -81,9 +82,9 @@ const Register = ({ navigation }) => {
       <View style={message != true ? {} : local_styles.hide}>
       <View style={styles.form.formGroup}>
           <Text style={styles.form.label}>Daftar Sebagai</Text>
-          <Picker selectedValue={body.kelamin} onValueChange={v => setBody({ ...body, role: v })} style={styles.form.formControl} >
+          <Picker selectedValue={body.role} onValueChange={v => setBody({ ...body, role: v })} style={styles.form.formControl} >
             <Picker.Item label="Pelanggan" value="pelanggan" />
-            <Picker.Item label="Penjual" value="penjual" />
+            <Picker.Item label="Penjaht" value="penjahit" />
           </Picker>
         </View>
         <View style={styles.form.formGroup}>
@@ -117,10 +118,10 @@ const Register = ({ navigation }) => {
           <Text style={styles.form.label}>Kecamatan</Text>
           <Select2
             isSelectSingle
-            style={{ borderRadius: 5 }}
-            colorTheme="blue"
-            popupTitle="Select item"
-            title="Select item"
+            style={styles.form.formControl}
+            colorTheme= {colors.default}
+            popupTitle="Pilih Kecamatan"
+            title="Pilih Kecamatan"
             data={daftarKec}
             onSelect={(data) => {
               getWilayah(data.toString(), 4)
@@ -134,10 +135,10 @@ const Register = ({ navigation }) => {
           <Text style={styles.form.label}>Desa</Text>
           <Select2
             isSelectSingle
-            style={{ borderRadius: 5 }}
-            colorTheme="blue"
-            popupTitle="Select item"
-            title="Select item"
+            style={styles.form.formControl}
+            colorTheme= {colors.default}
+            popupTitle="Pilih Kelurahan"
+            title="Pilih Kelurahan"
             data={daftarDesa}
             onSelect={(data) => {
               setBody({ ...body, kode_wilayah: data.toString() })
