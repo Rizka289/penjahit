@@ -97,12 +97,16 @@ const ProfilePenjual = ({ route, navigation }) => {
             selesai.saya = pesanan.saya.filter((v) => v.status == 'selesai');
             pesanan.saya.forEach(v => {
                 elementPesananSaya.push(
-                    <View key={v.id} style={{ paddingVertical:5, paddingHorizontal: 20, borderBottomColor: '#F6F6F6', borderBottomWidth: 3, marginBottom: 15}}>
+                    <TouchableOpacity onPress={() => console.log(v)} key={v.id} style={{ paddingVertical:5, paddingHorizontal: 20, borderBottomColor: '#F6F6F6', borderBottomWidth: 3, marginBottom: 15}}>
                         <Text>Detail Pesanan</Text>
                         <View >
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <Text>Id Pesanan</Text>
                                 <Text style={{marginLeft: 30}}>{v.id}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Text>Dipesan pada</Text>
+                                <Text style={{marginLeft: 30}}>{v.dibuat}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <Text>Model</Text>
@@ -117,7 +121,7 @@ const ProfilePenjual = ({ route, navigation }) => {
                                 <Text style={{marginLeft: 30}}>{v.status}</Text>
                             </View>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 )
 
             })

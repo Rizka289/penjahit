@@ -1,10 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import { View, Image, Text, StyleSheet, TouchableOpacity, Modal, Pressable } from "react-native";
+import { View, Image, Text, StyleSheet, ScrollView, Modal, Pressable } from "react-native";
 import Auth from "../../../models/Auth";
 import { colors } from "../../../utils";
 const ModalEl = ({ navigation, modalData, title = "", subtitle, type = 'list', open, openModal }) => {
-    console.log(modalData.length);
     return (
         <Modal
             animationType="slide"
@@ -18,18 +17,16 @@ const ModalEl = ({ navigation, modalData, title = "", subtitle, type = 'list', o
 
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
+                    <Pressable onPress={() => openModal(!open)} style={styles.closeButton}>
+                        <Text style={{ color: colors.disable, fontSize: 25, fontWeight: 'bold', textAlign: 'center' }}>X</Text>
+                    </Pressable>
                     <Text style={{ color: colors.default, fontSize: 20 }}>{title}</Text>
                     <Text style={{ color: colors.disable, fontSize: 15, marginBottom: 15 }}>{subtitle}</Text>
-
-                    {
-                        type == 'list' ? modalData.map(v => (<Text>{v}</Text>)) : modalData.map(v => v)
-                    }
-                    <Pressable
-                        style={[styles.button, styles.buttonClose]}
-                        onPress={() => openModal(!open)}
-                    >
-                        <Text style={styles.textStyle}>Tutup</Text>
-                    </Pressable>
+                    <ScrollView>
+                        {
+                            type == 'list' ? modalData.map(v => (<Text>{v}</Text>)) : modalData.map(v => v)
+                        }
+                    </ScrollView>
                 </View>
             </View>
         </Modal>
@@ -61,15 +58,17 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 22
+        marginTop: 22,
     },
     modalView: {
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
         padding: 35,
-        alignItems: "center",
+        height: 400,
+        overflow: 'scroll',
         shadowColor: "#000",
+        alignItems: "center",
         shadowOffset: {
             width: 0,
             height: 2
@@ -97,5 +96,24 @@ const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: "center"
+    },
+    closeButton: {
+        borderRadius: 50,
+        width: 40,
+        height: 40,
+        borderColor: '#2196F3',
+        borderWidth: 1,
+        position: 'absolute',
+        top: -15,
+        right: -10,
+        backgroundColor: 'white',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
     }
 });
