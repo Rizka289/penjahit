@@ -6,6 +6,7 @@ import ProfileAvatar from '../components/atoms/Button/Profile';
 import { colors } from '../utils';
 import ProfilePenjual from '../pages/Profile/penjual';
 import DashboardPenjahit from '../pages/penjahit/dashboard';
+import FormPesan from '../pages/pelanggan/pesan';
 const Stack = createStackNavigator();
 
 // kumpulan aviigasi" antar halaman
@@ -16,6 +17,7 @@ const Router = () => {
       <Stack.Screen options={{ headerShown: false }} name="Splash" component={Splash} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="FormPesan" component={FormPesan} />
       <Stack.Screen
         name="Pelanggan" component={DashbordPelanggan}
         options={(nav) => ({

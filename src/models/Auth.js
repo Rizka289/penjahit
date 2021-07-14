@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwtDecode from 'jwt-decode';
 const Auth = {
     login: async (email, password) => {
-        console.log("Body \n", {email: email, password: password});
+        console.log("Body \n", { email: email, password: password });
 
         let output = await fetch('https://penjahit.kamscodelab.tech/login', {
             method: "POST",
@@ -49,7 +49,8 @@ const Auth = {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(body)
+
+            body: JSON.stringify({ ...body, _token: await Auth.loadToken() })
         })
             .then((response) => response.json())
             .then(async (json) => {

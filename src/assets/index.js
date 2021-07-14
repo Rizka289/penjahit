@@ -1,3 +1,3 @@
 import logo from './image/logo.jpg';
-
-export {logo};
+import keranjang from './image/keranjang.png'
+export {logo, keranjang};

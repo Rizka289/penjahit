@@ -6373,7 +6373,7 @@
   dependencies:
     "prop-types" "^15.6.0"
 
-"react-native-vector-icons@^4.2.0", "react-native-vector-icons@4.6.0":
+"react-native-vector-icons@^4.2.0", "react-native-vector-icons@^4.6.0":
   "integrity" "sha512-rpfhfPiXCK2PX1nrNhdxSMrEGB/Gw/SvKoPM0G2wAkSoqynnes19K0VYI+Up7DqR1rFIpE4hP2erpT1tNx2tfg=="
   "resolved" "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-4.6.0.tgz"
   "version" "4.6.0"
@@ -6381,6 +6381,11 @@
     "lodash" "^4.0.0"
     "prop-types" "^15.5.10"
     "yargs" "^8.0.2"
+
+"react-native-wizard@^2.1.0":
+  "integrity" "sha512-GUkQcbZERHsx3WEyNC+9cVGo4NwrXOB1tsFgbcSoEYn1yO+3fqbiC2I8dVqzl9+KZpyDqI9BcQJbNe/X2EgUlQ=="
+  "resolved" "https://registry.npmjs.org/react-native-wizard/-/react-native-wizard-2.1.0.tgz"
+  "version" "2.1.0"
 
 "react-native@*", "react-native@^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || 1000.0.0", "react-native@>=0.57", "react-native@>=0.59", "react-native@>=0.59.0", "react-native@0.64.2":
   "integrity" "sha512-Ty/fFHld9DcYsFZujXYdeVjEhvSeQcwuTGXezyoOkxfiGEGrpL/uwUZvMzwShnU4zbbTKDu2PAm/uwuOittRGA=="

@@ -1,7 +1,9 @@
-import { FlatList, Image, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { FlatList, Image, ScrollView, TouchableOpacity, StyleSheet, Text, View } from "react-native";
+import React, { useState, useEffect } from "react";
 import { colors } from "../../utils";
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { keranjang } from "../../assets";
+import PenjahitModel from "../../models/Penjahit";
+import ModalEl from "../../components/atoms/Utils/Modal";
 
 const styles = StyleSheet.create({
     shadow: {
@@ -34,7 +36,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderRadius: 10,
         paddingHorizontal: 15,
-        paddingVertical: 25, 
+        paddingVertical: 25,
         position: 'absolute',
         top: 180
     }
@@ -56,16 +58,71 @@ const Section = ({ option = {}, items = [] }) => {
     )
 }
 
+const buatItemModal = (data) => {
+
+
+
+}
+
 const ProfilePenjual = ({ route, navigation }) => {
     const params = route.params;
+    const elementPesananSaya = [];
     const pengalaman = !params.portofolio ? undefined : params.portofolio.pengalaman;
-
+    const [openModal, setOpenModal] = useState(false);
+    const [pesanan, setPesanan] = useState({
+        saya: [],
+        semua: []
+    });
     const key_mapping = {
         alamat: ["Alamat"],
         email: ["E-mail"],
         hp: ['No Hp'],
         kelamin: ["Jenis Kelamin", { l: 'Laki-laki', p: 'Perempuan' }],
         ttl: ['Tanggal Lahir']
+    }
+
+
+    useEffect(async () => {
+        const data = await PenjahitModel.loadDataPesanan(params.username)
+        console.log("Pesanan \n", data);
+        setPesanan(data)
+    }, []);
+    const selesai = {
+        saya: [],
+        semua: []
+    };
+
+    if (pesanan.semua.length > 0) {
+        if (pesanan.saya.length > 0) {
+            selesai.saya = pesanan.saya.filter((v) => v.status == 'selesai');
+            pesanan.saya.forEach(v => {
+                elementPesananSaya.push(
+                    <View key={v.id} style={{ paddingVertical:5, paddingHorizontal: 20, borderBottomColor: '#F6F6F6', borderBottomWidth: 3, marginBottom: 15}}>
+                        <Text>Detail Pesanan</Text>
+                        <View >
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Text>Id Pesanan</Text>
+                                <Text style={{marginLeft: 30}}>{v.id}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Text>Model</Text>
+                                <Text style={{marginLeft: 30}}>{v.model}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Text>Bahan</Text>
+                                <Text style={{marginLeft: 30}}>{v.bahan}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Text>Status</Text>
+                                <Text style={{marginLeft: 30}}>{v.status}</Text>
+                            </View>
+                        </View>
+                    </View>
+                )
+
+            })
+        }
+        selesai.semua = pesanan.semua.filter((v) => v.status == 'selesai');
     }
 
     const profile = [];
@@ -78,7 +135,6 @@ const ProfilePenjual = ({ route, navigation }) => {
                 value: key_mapping[k][1] == undefined || key_mapping[k][1] == {} ? params[k] : key_mapping[k][1][params[k]]
             }
             if (k == 'alamat') {
-                tmp.value += "aljkaihakbakjbgfajbjabga";
                 if (tmp.value.length > 65)
                     tmp.value = tmp.value.substr(0, 65) + ' ...';
             }
@@ -102,20 +158,25 @@ const ProfilePenjual = ({ route, navigation }) => {
             <View style={{ backgroundColor: params.color, paddingVertical: 30 }}>
                 <Image style={{ alignSelf: 'center', width: 80, height: 80, borderRadius: 50, borderColor: 'white', borderWidth: 1 }} source={{ uri: params.poto }} />
                 <Text style={{ color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginTop: 15 }}>{params.nama_lengkap.toUpperCase()}</Text>
-                <Text style={{ color: 'white', textAlign: 'center', fontSize: 15 }}>{params.username}</Text>
-                <Text style={{ color: 'white', textAlign: 'center', marginTop: 15, fontSize: 15 }}>{!pengalaman ? "- Bulan " : pengalaman < 12 ? pengalaman + " Bulan" : Math.floor(pengalaman / 12) + " Tahun, " + pengalaman % 12 + " Bulan"} Pengalaman sebagai penjahit </Text>
+                <Text style={{ color: 'white', textAlign: 'center', fontSize: 15, marginBottom: 30 }}>{params.username}</Text>
+                {/* <Text style={{ color: 'white', textAlign: 'center', marginTop: 15, fontSize: 15 }}>{!pengalaman ? "- Bulan " : pengalaman < 12 ? pengalaman + " Bulan" : Math.floor(pengalaman / 12) + " Tahun, " + pengalaman % 12 + " Bulan"} Pengalaman sebagai penjahit </Text> */}
             </View>
+
             <View style={[styles.simpleMenu, styles.shadow]}>
                 <View>
-                    <Text style={{color: '#393E46' }}>Riwayat Pesanan</Text>
-                    <Text style={{color: '#393E46' }}>70/86</Text>
+                    <Text style={{ color: '#393E46' }}>Riwayat Pesanan</Text>
+                    <Text style={{ color: '#393E46' }}>{selesai.semua.length} / {pesanan.semua.length}</Text>
                 </View>
-                <View>
-                    <Text style={{color: '#393E46' }}>Pesanan Anda</Text>
-                    <Text style={{color: '#393E46' }}>0/0  <FontAwesome style={{fontSize: 20, color: colors.default}} onPress={() => {console.log("TAMBAH")}} name={'plus-circle'} /></Text>
-                </View>
+                <TouchableOpacity onPress={() => setOpenModal(true)} style={{ marginLeft: 15 }}>
+                    <Text style={{ color: '#393E46' }}>Pesanan Anda</Text>
+                    <Text style={{ color: '#393E46' }}>{selesai.saya.length} / {pesanan.saya.length} </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('FormPesan', params)} style={{ ...styles.shadow, top: 30, left: 30, backgroundColor: colors.info, borderRadius: 50, borderWidth: 1, borderColor: 'black', justifyContent: 'center' }}>
+                    <Image style={{}} source={keranjang} />
+                </TouchableOpacity>
             </View>
-            <View style={{ backgroundColor: '#F6F6F6', marginTop: -30, borderTopRightRadius: 20, borderTopLeftRadius: 30 }}>
+            <ModalEl subtitle={"Toko " + params.username} title={"Pesanan Saya"} open={openModal} openModal={setOpenModal} type="list_element" modalData={elementPesananSaya} />
+            <View style={{ backgroundColor: '#F6F6F6', marginTop: -25, borderTopRightRadius: 20, borderTopLeftRadius: 30 }}>
                 <View style={{ marginTop: 50 }}>
                     <Section option={{ section_name: "Profile" }} items={profile} />
                     <Section option={{ section_name: "Keahlian", isNodata: true }} items={keahlian} />
