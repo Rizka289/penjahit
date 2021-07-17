@@ -13,14 +13,13 @@ const Splash = ({ navigation }) => {
       if (token == '')
         navigation.replace('WelcomeAuth');
       else {
-        const data = jwt_decode(token);
+        const data = await jwt_decode(token);
         if (Date.now() >= Date.parse(data.login_at)) {
           AsyncStorage.removeItem('_token_');
           navigation.replace('WelcomeAuth');
         }
         else {
           navigation.replace(data.role.charAt(0).toUpperCase() + data.role.slice(1));
-
         }
 
 

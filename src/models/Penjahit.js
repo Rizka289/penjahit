@@ -76,6 +76,38 @@ const PenjahitModel = {
         }
 
         return output;
+    }, 
+    updatePortofolio: async (body) => {
+        const user = await Auth.loadData();
+        console.log("Body \n", JSON.stringify({
+            ...body,
+            user: user.username,
+            _token: await Auth.loadToken()
+        }));
+        let data = await fetch('https://penjahit.kamscodelab.tech/portofolio/update', {
+            method: "POST",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            "body": JSON.stringify({
+                ...body,
+                user: user.username,
+                _token: await Auth.loadToken()
+            })
+        }).then(res => res.json()).then(async res => {
+            if(res.type == 'success'){
+                await AsyncStorage.removeItem('_token_');
+                await Auth.saveToken(res.token);
+            }
+            return {
+                token: res.token,
+                success: res.type == 'success',
+                message: res.message
+            }
+        }).catch(err => console.log(err))
+        
+        return data;
     }
 };
 

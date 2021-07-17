@@ -7,17 +7,21 @@ import { colors } from '../../../utils';
 import { FlatGrid } from 'react-native-super-grid';
 import PenjahitModel from '../../../models/Penjahit';
 import Alert from '../../../components/atoms/Utils/Alert';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 const DashbordPelanggan = ({ navigation }) => {
+    const [loading, isLoading] = useState(true);
     const [message, setMessage] = useState(null);
-    const [reload, reloadPage] = useState(false); 
+    const [reload, reloadPage] = useState(false);
     const [profile, setProfile] = useState({})
 
     useEffect(async () => {
         BackHandler.addEventListener('hardwareBackPress', async () => await Auth.mustLogin(navigation))
         const data = await Auth.loadData()
         const penjahit = await PenjahitModel.getAllPenjahit();
-        const tmp = {...data, penjahit: penjahit}
+        const tmp = { ...data, penjahit: penjahit }
+        isLoading(false);
         setProfile(tmp)
         console.log("Penjahit _inner", tmp.penjahit);
 
@@ -33,15 +37,6 @@ const DashbordPelanggan = ({ navigation }) => {
         navigation.navigate(screen, params);
     };
 
-    const sendData = async () => {
-        const results = await Auth.login(email, password);
-        console.log(results);
-        if (!results.success)
-            setMessage(results.message);
-        else
-            setMessage("")
-    }
-
     const searchPenjahit = (key) => {
         if (key == "")
             setItems(profile.penjahit);
@@ -54,6 +49,11 @@ const DashbordPelanggan = ({ navigation }) => {
 
     return (
         <View style={{ backgroundColor: 'white', flex: 1 }}>
+            <Spinner
+                visible={loading}
+                textContent={'Loading...'}
+                textStyle={{ color: '#FFF' }}
+            />
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Image source={logo} style={styles.wrapper.ilustration} />
                 <Text style={styles.text.welcome}>{profile.nama_lengkap}</Text>
@@ -68,7 +68,7 @@ const DashbordPelanggan = ({ navigation }) => {
 
                     spacing={10}
                     renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => handleGoTo("PofilePenjahit", item)} style={[{...local_styles.itemContainer, ...styles.shadow}, { backgroundColor: item.color }]}>
+                        <TouchableOpacity onPress={() => handleGoTo("PofilePenjahit", item)} style={[{ ...local_styles.itemContainer, ...styles.shadow }, { backgroundColor: item.color }]}>
                             <Image style={{ width: 60, height: 60, position: 'absolute', top: 10, left: 10, borderRadius: 50, borderColor: 'white', borderWidth: 1 }} source={{ uri: item.poto }} />
                             <Text style={local_styles.itemName}>{item.nama_lengkap}</Text>
                             <Text style={local_styles.itemCode}>{item.username}</Text>

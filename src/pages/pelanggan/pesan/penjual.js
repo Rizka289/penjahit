@@ -1,9 +1,10 @@
 import { FlatList, Image, ScrollView, TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
-import { colors } from "../../utils";
-import { keranjang } from "../../assets";
-import PenjahitModel from "../../models/Penjahit";
-import ModalEl from "../../components/atoms/Utils/Modal";
+import { colors } from "../../../utils";
+import { keranjang } from "../../../assets";
+import PenjahitModel from "../../../models/Penjahit";
+import ModalEl from "../../../components/atoms/Utils/Modal";
+import Utils from "../../../components/atoms/Utils/func";
 
 const styles = StyleSheet.create({
     shadow: {
@@ -19,11 +20,11 @@ const styles = StyleSheet.create({
     },
     section_item: {
         flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        // flexDirection: 'row',
+        justifyContent: 'flex-end',
         marginHorizontal: 20,
         marginVertical: 15,
-        alignItems: 'flex-end',
+        // alignItems: 'flex-end',
         borderBottomColor: '#F6F6F6',
         borderBottomWidth: 2
     },
@@ -46,12 +47,14 @@ const Section = ({ option = {}, items = [] }) => {
     if (!option.height)
         option.height = 55 * (items.length + 1);
 
-    if (option.isNodata)
+    if (items.length == 0 && option.isNodata)
         option.height = 50;
+
+    
     return (
         <View style={{ marginHorizontal: 25, marginVertical: 20 }}>
             <Text style={{ color: '#6B778D', fontWeight: 'bold', fontSize: 17 }}>{option.section_name}</Text>
-            <View style={{ ...styles.shadow, borderRadius: 10, backgroundColor: 'white', flex: 1, marginTop: 10, height: option.height, overflow: 'scroll' }}>
+            <View style={{ ...styles.shadow, borderRadius: 10, backgroundColor: 'white', flex: 1, marginTop: 10, overflow: 'scroll' }}>
                 {items.length > 0 ? items : option.isNodata ? <Text style={{ textAlign: 'center', marginVertical: 15, color: colors.disable }}>Tidak ada data</Text> : null}
             </View>
         </View>
@@ -81,7 +84,15 @@ const ProfilePenjual = ({ route, navigation }) => {
         ttl: ['Tanggal Lahir']
     }
 
-
+    const key_mapping_portofolio = {
+        model: ["Model yang bisa dijahit", v => Utils.replaceAll(v, ';', ', ')],
+        bahan: ["Bahan yang bisa dijahit", v => Utils.replaceAll(v, ';', ', ')],
+        spesialisasi: ["Penjahit pakaian untuk", v => Utils.replaceAll(v, ';', ', ')],
+        menyediakan_bahan: ["Menyediakan bahan", v => v == 1 ? "Ya" : "Tidak"],
+        sertifikasi: ["Memiliki sertifikat", v => v == 1 ? "Ya" : "Tidak"],
+        note: ["Catatan", v => v],
+        pengalaman: ["Sudah menjahit selama", v => v < 12 ? v + " Bulan" : v % 12 == 0 ? Math.floor(v / 12) + " Tahun" : Math.floor(v / 12) + " Tahun, " + v % 12 + " Bulan"]
+    }
     useEffect(async () => {
         const data = await PenjahitModel.loadDataPesanan(params.username)
         console.log("Pesanan \n", data);
@@ -97,28 +108,28 @@ const ProfilePenjual = ({ route, navigation }) => {
             selesai.saya = pesanan.saya.filter((v) => v.status == 'selesai');
             pesanan.saya.forEach(v => {
                 elementPesananSaya.push(
-                    <TouchableOpacity onPress={() => console.log(v)} key={v.id} style={{ paddingVertical:5, paddingHorizontal: 20, borderBottomColor: '#F6F6F6', borderBottomWidth: 3, marginBottom: 15}}>
+                    <TouchableOpacity onPress={() => console.log(v)} key={v.id} style={{ paddingVertical: 5, paddingHorizontal: 20, borderBottomColor: '#F6F6F6', borderBottomWidth: 3, marginBottom: 15 }}>
                         <Text>Detail Pesanan</Text>
                         <View >
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <Text>Id Pesanan</Text>
-                                <Text style={{marginLeft: 30}}>{v.id}</Text>
+                                <Text style={{ marginLeft: 30 }}>{v.id}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <Text>Dipesan pada</Text>
-                                <Text style={{marginLeft: 30}}>{v.dibuat}</Text>
+                                <Text style={{ marginLeft: 30 }}>{v.dibuat}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <Text>Model</Text>
-                                <Text style={{marginLeft: 30}}>{v.model}</Text>
+                                <Text style={{ marginLeft: 30 }}>{v.model}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <Text>Bahan</Text>
-                                <Text style={{marginLeft: 30}}>{v.bahan}</Text>
+                                <Text style={{ marginLeft: 30 }}>{v.bahan}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <Text>Status</Text>
-                                <Text style={{marginLeft: 30}}>{v.status}</Text>
+                                <Text style={{ marginLeft: 30 }}>{v.status}</Text>
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -154,7 +165,16 @@ const ProfilePenjual = ({ route, navigation }) => {
     });
 
     if (Object.keys(params.portofolio).length != 0) {
-
+        Object.keys(params.portofolio).forEach(k => {
+            if (Object.keys(key_mapping_portofolio).includes(k)) {
+                keahlian.push(
+                    <View key={k} style={styles.section_item} >
+                        <Text style={{ color: '#393E46' }}>{key_mapping_portofolio[k][0]}</Text>
+                        <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{params.portofolio[k] != undefined ? key_mapping_portofolio[k][1](params.portofolio[k]) : ""}</Text>
+                    </View>
+                )
+            }
+        })
     }
 
     return (
@@ -168,7 +188,7 @@ const ProfilePenjual = ({ route, navigation }) => {
 
             <View style={[styles.simpleMenu, styles.shadow]}>
                 <View>
-                    <Text style={{ color: '#393E46' }}>Riwayat Pesanan</Text>
+                    <Text style={{ color: '#393E46' }}>Semua Pesanan</Text>
                     <Text style={{ color: '#393E46' }}>{selesai.semua.length} / {pesanan.semua.length}</Text>
                 </View>
                 <TouchableOpacity onPress={() => setOpenModal(true)} style={{ marginLeft: 15 }}>

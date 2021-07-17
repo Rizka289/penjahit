@@ -4,9 +4,14 @@ import { Splash, Login, Register, WelcomeAuth } from '../pages';
 import DashbordPelanggan from '../pages/pelanggan/dashboard';
 import ProfileAvatar from '../components/atoms/Button/Profile';
 import { colors } from '../utils';
-import ProfilePenjual from '../pages/Profile/penjual';
+import ProfilePenjual from '../pages/pelanggan/pesan/penjual';
 import DashboardPenjahit from '../pages/penjahit/dashboard';
 import FormPesan from '../pages/pelanggan/pesan';
+import Profile from '../pages/profile';
+import UpdateProfile from '../pages/profile/update';
+import Portofilio from '../pages/profile/portofolio';
+import UploadImage from '../pages/profile/upload.image';
+import Pesanan from '../pages/pelanggan/dashboard/pesanan';
 const Stack = createStackNavigator();
 
 // kumpulan aviigasi" antar halaman
@@ -29,11 +34,11 @@ const Router = () => {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
-          headerRight: () => (<ProfileAvatar navigation={nav.navigation}/>)
+          headerRight: () => (<ProfileAvatar navigation={nav.navigation} />)
 
         })}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="Penjahit" component={DashboardPenjahit}
         options={(nav) => ({
           title: "Consuo",
@@ -44,7 +49,7 @@ const Router = () => {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
-          headerRight: () => (<ProfileAvatar navigation={nav.navigation}/>)
+          headerRight: () => (<ProfileAvatar navigation={nav.navigation} />)
 
         })}
       />
@@ -67,6 +72,35 @@ const Router = () => {
         name="WelcomeAuth"
         component={WelcomeAuth}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={Profile}
+        options={{ 
+           headerTransparent: true,
+           title: ""
+        }}
+
+      />
+      <Stack.Screen
+        name="UpdateProfile"
+        component={UpdateProfile}
+        
+      />
+       <Stack.Screen
+        name="UpdatePortofolio"
+        component={Portofilio}
+        
+      />
+         <Stack.Screen
+        name="UploadImage"
+        component={UploadImage}
+        
+      />
+         <Stack.Screen
+        name="Pesanan"
+        component={Pesanan}
+        options={{headerTransparent: true}}
       />
     </Stack.Navigator>
   );

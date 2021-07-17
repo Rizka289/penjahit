@@ -53,7 +53,33 @@ const Auth = {
             body: JSON.stringify({ ...body, _token: await Auth.loadToken() })
         })
             .then((response) => response.json())
+            .then((json) => {
+                return {
+                    message: json.message,
+                    success: json.type == 'success',
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+        return output;
+    },
+    updateProfile: async (body) => {
+        let output = await fetch('https://penjahit.kamscodelab.tech/update', {
+            method: "POST",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+
+            body: JSON.stringify({ ...body, _token: await Auth.loadToken() })
+        })
+            .then((response) => response.json())
             .then(async (json) => {
+                if(json.type == 'success'){
+                    await AsyncStorage.removeItem("_token_");
+                    await Auth.saveToken(json.token);
+                }
                 return {
                     message: json.message,
                     success: json.type == 'success',

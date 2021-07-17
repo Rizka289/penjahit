@@ -9,8 +9,8 @@ const styles = {
             flex: 1,
         },
         ilustration: {
-            width: 219,
-            height: 119,
+            width: 250,
+            height: 178,
             marginBottom: 7,
         },
     },
@@ -19,7 +19,7 @@ const styles = {
             fontSize: 15,
             fontWeight: 'bold',
             color: colors.default,
-            marginBottom: 76,
+            marginBottom: 46,
         },
     },
 

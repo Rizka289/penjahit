@@ -9,22 +9,28 @@ import Uihelper from '../../models/Uihelper';
 import DatePicker from 'react-native-date-picker';
 import Select2 from "react-select2-native";
 import { colors } from '../../utils';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 
 const Register = ({ navigation }) => {
+  const [loading, isLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [daftarKec, setDaftarKec] = useState([]);
   const [daftarDesa, setDaftarDesa] = useState([]);
+  const [tampilPassword, setTampilPassword] = useState(false)
+
   const [body, setBody] = useState({
     nama_lengkap: "",
     username: "",
     kelamin: "l",
-    tanggal_lahir: Date.now() / 1000,
+    tanggal_lahir: Date.now(),
     email: "",
     no_hp: "",
     alamat: "",
     kode_wilayah: "",
-    role: "pelanggan"
+    role: "pelanggan",
+    password: ""
   });
 
   useEffect(() => {
@@ -62,7 +68,7 @@ const Register = ({ navigation }) => {
   }
 
   const sendData = async () => {
-
+    isLoading(true);
     console.log("body: ", body);
     const results = await Auth.register(body);
     console.log("============== \n");
@@ -72,15 +78,22 @@ const Register = ({ navigation }) => {
     else
       setMessage(true)
 
+    isLoading(false)
+
   }
   return (
     <ScrollView style={{ backgroundColor: 'white', flex: 1 }}>
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
       <View style={{ alignItems: 'center', justifyContent: 'center' }}>
         <Image source={logo} style={styles.wrapper.ilustration} />
         <Text style={styles.text.welcome}>Daftar</Text>
       </View>
       <View style={message != true ? {} : local_styles.hide}>
-      <View style={styles.form.formGroup}>
+        <View style={styles.form.formGroup}>
           <Text style={styles.form.label}>Daftar Sebagai</Text>
           <Picker selectedValue={body.role} onValueChange={v => setBody({ ...body, role: v })} style={styles.form.formControl} >
             <Picker.Item label="Pelanggan" value="pelanggan" />
@@ -96,6 +109,11 @@ const Register = ({ navigation }) => {
           <TextInput defaultValue={body.username} onChangeText={v => setBody({ ...body, username: v })} style={styles.form.formControl} />
         </View>
         <View style={styles.form.formGroup}>
+          <Text style={styles.form.label}>Password</Text>
+          <TextInput secureTextEntry={!tampilPassword} placeholder="" defaultValue={body.password} onChangeText={v => setBody({ ...body, password: v })} style={styles.form.formControl} />
+          <Text onPress={() => setTampilPassword(!tampilPassword)} style={{ color:colors.disable , marginLeft: 20, fontSize: 15, marginTop: 5 }}>{tampilPassword ? "Sembunyikan Password" : "Tampilkan Password"}</Text>
+        </View>
+        <View style={styles.form.formGroup}>
           <Text style={styles.form.label}>Jenis Kelamin</Text>
           <Picker selectedValue={body.kelamin} onValueChange={v => setBody({ ...body, kelamin: v })} style={styles.form.formControl} >
             <Picker.Item label="Laki-laki" value="l" />
@@ -104,7 +122,7 @@ const Register = ({ navigation }) => {
         </View>
         <View style={styles.form.formGroup}>
           <Text style={styles.form.label}>Tangal Lahir</Text>
-          <DatePicker mode={'date'} date={new Date(body.tanggal_lahir * 1000)} androidVariant={'nativeAndroid'} onDateChange={(v) => setBody({ ...body, tanggal_lahir: Math.floor(v.getTime() / 1000) })} />
+          <DatePicker mode={'date'} date={new Date(body.tanggal_lahir)} androidVariant={'nativeAndroid'} onDateChange={(v) => setBody({ ...body, tanggal_lahir: v.getTime() })} />
         </View>
         <View style={styles.form.formGroup}>
           <Text style={styles.form.label}>Email</Text>
@@ -119,7 +137,7 @@ const Register = ({ navigation }) => {
           <Select2
             isSelectSingle
             style={styles.form.formControl}
-            colorTheme= {colors.default}
+            colorTheme={colors.default}
             popupTitle="Pilih Kecamatan"
             title="Pilih Kecamatan"
             data={daftarKec}
@@ -136,7 +154,7 @@ const Register = ({ navigation }) => {
           <Select2
             isSelectSingle
             style={styles.form.formControl}
-            colorTheme= {colors.default}
+            colorTheme={colors.default}
             popupTitle="Pilih Kelurahan"
             title="Pilih Kelurahan"
             data={daftarDesa}
@@ -151,7 +169,7 @@ const Register = ({ navigation }) => {
         <View style={styles.form.formGroup}>
           <Text style={styles.form.label}>Alamat Lengkap</Text>
           <TextInput defaultValue={body.alamat} onChangeText={v => setBody({ ...body, alamat: v })} style={styles.form.formControl} />
-        </View>       
+        </View>
         <Text style={message != null && message != true ? local_styles.show : local_styles.hide}>{message}</Text>
         <View style={{ marginHorizontal: '25%' }}>
           <ActionBttuon onPress={sendData} title="Daftar" />
@@ -159,8 +177,8 @@ const Register = ({ navigation }) => {
         </View>
       </View>
       <View style={message == true ? {} : local_styles.hide}>
-          <Text style={{textAlign: 'center'}}>Anda Berhasil Mendaftar, Silahkan Buka Email Anda untuk Aktifasi Akun</Text>
-          <Text style={{ marginTop: 50, textAlign: 'center'}} onPress={() => handleGoTo('Login')} >Klik disin untuk Masuk</Text>
+        <Text style={{ textAlign: 'center' }}>Anda Berhasil Mendaftar, Silahkan Buka Email Anda untuk Aktifasi Akun</Text>
+        <Text style={{ marginTop: 50, textAlign: 'center' }} onPress={() => handleGoTo('Login')} >Klik disin untuk Masuk</Text>
       </View>
 
     </ScrollView>
@@ -175,5 +193,5 @@ const local_styles = {
   },
   show: {
     textAlign: "center", color: "red", fontSize: 10
-  }
+  },
 }

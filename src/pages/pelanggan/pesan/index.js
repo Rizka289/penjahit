@@ -9,9 +9,10 @@ import KategoriBahan from "./Kategori/bahan"
 import { FlatGrid } from "react-native-super-grid"
 import PenjahitModel from "../../../models/Penjahit"
 import { colors } from "../../../utils"
-
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const FormPesan = ({ route, navigation }) => {
+    const [loading, isLoading] = useState(false);
     const params = route.params;
     const wizard = useRef()
     const [message, setMessage] = useState(null);
@@ -27,15 +28,18 @@ const FormPesan = ({ route, navigation }) => {
     });
 
     const sendData = async () => {
-        console.log("Body \n",body);
+        isLoading(true);
+        console.log("Body \n", body);
         const result = await PenjahitModel.buatPesanan(body)
-        if(!result.success)
+        if (!result.success) {
+            isLoading(false);
             setMessage(result.message)
-        else{
+        }
+        else {
             setMessage(result.message);
-
             setTimeout(() => {
-                navigation.navigate('PofilePenjahit');
+                navigation.replace('PofilePenjahit', params);
+                isLoading(false);
             }, 5000)
         }
     }
@@ -75,6 +79,11 @@ const FormPesan = ({ route, navigation }) => {
     ]
     return (
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between', backgroundColor: 'white' }}>
+            <Spinner
+                visible={loading}
+                textContent={'Loading...'}
+                textStyle={{ color: '#FFF' }}
+            />
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Image source={logo} style={styles.wrapper.ilustration} />
                 <Text style={styles.text.welcome}>Mau menjahit apa hari ini </Text>
@@ -92,7 +101,7 @@ const FormPesan = ({ route, navigation }) => {
                     }}
                 />
             </View>
-            {message != null ? <Text style={{color: colors.danger, textAlign: 'center', marginBottom: 30}}>{message}</Text> : null}
+            {message != null ? <Text style={{ color: colors.danger, textAlign: 'center', marginBottom: 30 }}>{message}</Text> : null}
             <View
                 style={{
                     justifyContent: "space-between",
@@ -102,21 +111,21 @@ const FormPesan = ({ route, navigation }) => {
                     borderBottomWidth: 1,
                     bottom: 0
                 }}>
-                
+
                 <Button disabled={isFirstStep} title="Prev" onPress={() => wizard.current.prev()} />
                 <Text>Step {currentStep + 1}</Text>
-                <Button title={isLastStep ? "Pesan" :"Next"} onPress={() => {
-                    if(!isLastStep){
-                        if(currentStep == 0 && body.model == null)
+                <Button title={isLastStep ? "Pesan" : "Next"} onPress={() => {
+                    if (!isLastStep) {
+                        if (currentStep == 0 && body.model == null)
                             setMessage("Pilih Model dulu");
-                        else if(currentStep == 1 && body.bahan == null)
+                        else if (currentStep == 1 && body.bahan == null)
                             setMessage("Pilih Bahan dulu");
-                        else{
+                        else {
                             setMessage(null)
                             wizard.current.next()
                         }
-                            
-                    }else{
+
+                    } else {
                         sendData();
                     }
                 }} />

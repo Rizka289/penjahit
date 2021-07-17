@@ -5,7 +5,11 @@ import Auth from "../../../models/Auth";
 import { colors } from "../../../utils";
 const ProfileAvatar = ({navigation} ) => {
     const [profileMenu, isOpenMenu] = useState(false);
-
+    const [params, setParams] = useState({});
+    useEffect(async () => {
+        const data = await Auth.loadData();
+        setParams(data);
+    }, [])
     return (
         <View style={{ flex: 1 }}>
             <View style={styles.container}>
@@ -31,8 +35,8 @@ const ProfileAvatar = ({navigation} ) => {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text onPress={() => navigation.navigate('')} style={styles.modalText}>My Profile</Text>
-                        <Text style={styles.modalText}>Notifikasi</Text>
+                        <Text onPress={() => navigation.navigate('Profile', params)} style={styles.modalText}>My Profile</Text>
+                        <Text style={styles.modalText} onPress={() => navigation.navigate("Pesanan", params)}>Pesanan</Text>
                         <Text onPress={() => Auth.logOut(navigation)} style={styles.modalText}>Keluar</Text>
                         <Pressable
                             style={[styles.button, styles.buttonClose]}
