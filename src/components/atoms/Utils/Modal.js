@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { View, Image, Text, StyleSheet, ScrollView, Modal, Pressable } from "react-native";
 import Auth from "../../../models/Auth";
 import { colors } from "../../../utils";
-const ModalEl = ({ navigation, modalData, title = "", subtitle, type = 'list', open, openModal }) => {
+const ModalEl = ({styles={}, navigation, modalData, title = "", subtitle, type = 'list', open, openModal }) => {
     return (
         <Modal
             animationType="slide"
@@ -15,7 +15,7 @@ const ModalEl = ({ navigation, modalData, title = "", subtitle, type = 'list', o
             }}
         >
 
-            <View style={styles.centeredView}>
+            <View style={{...styles.centeredView, ...styles }}>
                 <View style={styles.modalView}>
                     <Pressable onPress={() => openModal(!open)} style={styles.closeButton}>
                         <Text style={{ color: colors.disable, fontSize: 25, fontWeight: 'bold', textAlign: 'center' }}>X</Text>

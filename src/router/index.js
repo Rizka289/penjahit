@@ -11,7 +11,9 @@ import Profile from '../pages/profile';
 import UpdateProfile from '../pages/profile/update';
 import Portofilio from '../pages/profile/portofolio';
 import UploadImage from '../pages/profile/upload.image';
-import Pesanan from '../pages/pelanggan/dashboard/pesanan';
+import Pesanan from '../pages/pelanggan/pesanan/pesanan';
+import DetailPesanan from '../pages/pelanggan/pesanan/detail';
+
 const Stack = createStackNavigator();
 
 // kumpulan aviigasi" antar halaman
@@ -101,6 +103,11 @@ const Router = () => {
         name="Pesanan"
         component={Pesanan}
         options={{headerTransparent: true}}
+      />
+         <Stack.Screen
+        name="DetailPesanan"
+        component={DetailPesanan}
+        options={{headerTransparent: true, title:""}}
       />
     </Stack.Navigator>
   );

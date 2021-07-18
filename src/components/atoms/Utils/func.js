@@ -10,7 +10,7 @@ const Utils = {
             return text.join(' ');
         }
         else
-            return this.charAt(0).toUpperCase() + this.slice(1);
+            return text.charAt(0).toUpperCase() + text.slice(1);
 
     },
     replaceAll: (text, awal, baru) => text.split(awal).join(baru),
@@ -25,7 +25,9 @@ const Utils = {
             rupiah += separator + ribuan.join('.') + ',00';
         }
         return rupiah;
-    }
+    }, 
+    imagePath: (filename) =>  "https://penjahit.kamscodelab.tech/public/img/profile/" + filename,
+    isEmpty: (variabel) =>  variabel == undefined || variabel == null || variabel == "" || variabel == [] || variabel == {}
 }
 
 export default Utils;

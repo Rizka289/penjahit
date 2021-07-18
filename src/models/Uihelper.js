@@ -16,25 +16,31 @@ const Uihelper = {
         return res;
     },
 
-    daftarPesanan: async (username) => {
-        let url = "https://penjahit.kamscodelab.tech/pesanan?t=pelanggan&usr=" + Utils.replaceAll(username, " ", "_");
+    daftarPesanan: async (usr) => {
+        let url = "https://penjahit.kamscodelab.tech/pesanan/" + usr.role + "?usr=" + Utils.replaceAll(usr.username, " ", "+");
         const res = await fetch(url).then(res => res.json()).then(res => res).catch((e) => console.log(e));
+        console.log("RES \n", res);
         let output = {
             success: res.type == "success",
-            message: res.message,
             data: {
                 semua: [],
                 selesai: []
             }
         }
-        if(res.type == 'seccess'){
+        if(res.type == 'success'){
             Object.keys(res).forEach(k => {
+                if(k == 'type')
+                    return;
+
                 output.data.semua.push(res[k])
                 if(res[k].status == 'selesai')
                     output.data.selesai.push(res[k])
             })
+            output.message = null
 
-        }
+        }else
+            output.message = res.message;
+
         return output;
     }
 
