@@ -69,6 +69,7 @@ const buatItemModal = (data) => {
 
 const ProfilePenjual = ({ route, navigation }) => {
     const params = route.params;
+    console.log(params);
     const elementPesananSaya = [];
     const pengalaman = !params.portofolio ? undefined : params.portofolio.pengalaman;
     const [openModal, setOpenModal] = useState(false);

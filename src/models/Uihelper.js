@@ -1,5 +1,6 @@
 import { data } from "browserslist";
 import Utils from "../components/atoms/Utils/func";
+import Auth from "./Auth";
 const Uihelper = {
     getWilayah: async (id = null, level = null) => {
         let url = "https://penjahit.kamscodelab.tech/uihelper/getwilayah";
@@ -16,10 +17,10 @@ const Uihelper = {
         return res;
     },
 
-    daftarPesanan: async (usr) => {
+    daftarPesanan: async () => {
+        const usr = await Auth.loadData();
         let url = "https://penjahit.kamscodelab.tech/pesanan/" + usr.role + "?usr=" + Utils.replaceAll(usr.username, " ", "+");
         const res = await fetch(url).then(res => res.json()).then(res => res).catch((e) => console.log(e));
-        console.log("RES \n", res);
         let output = {
             success: res.type == "success",
             data: {

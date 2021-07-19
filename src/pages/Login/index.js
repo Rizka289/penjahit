@@ -17,7 +17,7 @@ const Login = ({ navigation }) => {
   });
 
   const handleGoTo = screen => {
-    navigation.navigate(screen);
+    navigation.replace(screen);
   };
 
   const sendData = async () => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Text, View } from "react-native"
+import { BackHandler, Text, View } from "react-native"
 import Alert from "../../../components/atoms/Utils/Alert"
 import Auth from "../../../models/Auth";
 
@@ -10,6 +10,8 @@ const DashboardPenjahit = ({navigation}) => {
     useEffect(async () => {
         const data = await Auth.loadData('_token_'); 
         // BackHandler.addEventListener('hardwareBackPress', async () => await Auth.mustLogin(navigation))
+        BackHandler.addEventListener('hardwareBackPress', () => false)
+        
         if(data == null)
             navigation.replace("Splash")    
         setProfile({...profile, ...data});

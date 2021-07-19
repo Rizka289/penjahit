@@ -18,7 +18,7 @@ const ProfileAvatar = ({navigation} ) => {
                         onTap
                         style={styles.tinyLogo}
                         source={{
-                            uri: "https://eco.kamscodelab.tech/public/assets/img/profile/default.jpg",
+                            uri: "https://penjahit.kamscodelab.tech/public/img/profile/" + params.poto,
                         }}
                     />
                 </TouchableOpacity>
@@ -35,12 +35,12 @@ const ProfileAvatar = ({navigation} ) => {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text onPress={() => navigation.navigate('Profile', params)} style={styles.modalText}>My Profile</Text>
-                        <Text style={styles.modalText} onPress={() => navigation.navigate("Pesanan", params)}>Pesanan</Text>
-                        <Text onPress={() => Auth.logOut(navigation)} style={styles.modalText}>Keluar</Text>
+                        <Text onPress={() => {navigation.navigate('Profile', params); isOpenMenu(false)}} style={styles.modalText}>My Profile</Text>
+                        <Text style={styles.modalText} onPress={() => {navigation.navigate("Pesanan", params); isOpenMenu(false)}}>Pesanan</Text>
+                        <Text onPress={() => {Auth.logOut(navigation), isOpenMenu(false)}} style={styles.modalText}>Keluar</Text>
                         <Pressable
                             style={[styles.button, styles.buttonClose]}
-                            onPress={() => isOpenMenu(!profileMenu)}
+                            onPress={() => isOpenMenu(false)}
                         >
                             <Text style={styles.textStyle}>Tutup</Text>
                         </Pressable>
@@ -64,13 +64,18 @@ const styles = StyleSheet.create({
         height: 50,
         position: 'absolute',
         right: 0,
-        bottom: 2
+        bottom: 2,
+        
     },
     tinyLogo: {
-        width: 40,
-        height: 40,
+        borderRadius: 50,
+        width: 50,
+        height: 50,
         justifyContent: 'center',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        borderColor: 'white',
+        borderStyle: "solid",
+        borderWidth: 1,
     },
     centeredView: {
         flex: 1,

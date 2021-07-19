@@ -5,24 +5,25 @@ import ModalEl from "../../../components/atoms/Utils/Modal";
 import Utils from "../../../components/atoms/Utils/func";
 import Spinner from "react-native-loading-spinner-overlay";
 import Auth from "../../../models/Auth";
-
-
-const MenuPesanan = () => (
-    [
-        <Text>Batalkan Pesanan</Text>
-    ]
-)
+import Toast from "react-native-simple-toast";
 
 const DetailPesanan = ({ route, navigation }) => {
     const params = route.params;
     const [loading, isLoading] = useState(false);
-    // const [openModal, setOpenModal] = useState(false);
     const [wilayah, setWilayah] = useState({
         kab: "-",
         kec: '-',
         desa: "-"
     });
-
+    const mapStatus = {
+        'dipesan': 'Dipesan',
+        'diterima': 'Pesanan Diterima',
+        'dikerjakan': 'Pesanan sedang dikerjakan',
+        'batal': 'Pesaan Dibatalkan',
+        'tolak': 'Pesanan Ditolak',
+        'selesai': 'Pesanan Selesai'
+    }
+    console.log(params);
     useEffect(async () => {
         if (!Utils.isEmpty(params.kode_wilayah)) {
             let temp = {}
@@ -39,34 +40,79 @@ const DetailPesanan = ({ route, navigation }) => {
                 })
 
                 setWilayah(temp);
-                // isLoading(false)
             })
         }
 
     }, [])
 
-
-    const sendData = async () => {
+    const sendData = async (action = 'batal') => {
         isLoading(true);
         const token = await Auth.loadToken()
-        console.log(JSON.stringify({ _token:token, user: params.pemesan, id: params.id }));
-        const res = await fetch("https://penjahit.kamscodelab.tech/pesanan/batalkan/", {
+        const res = await fetch("https://penjahit.kamscodelab.tech/pesanan/status/", {
             method: "POST",
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ _token:token, user: params.pemesan, id: params.id })
+            body: JSON.stringify({ _token: token, pemesan: params.pemesan, pesanan: params.id, status_baru: action})
         }).then(async res => {
-            console.log(await res.json());
+            res = await res.json();
+            console.log(res);
+            if(res.type == 'success')
+                params.status = action
             isLoading(false);
-            const data = await Auth.loadData()
-            setTimeout(() => {
-                navigation.replace("Pesanan", data)
-
-            }, 2000)
-        })
+            Toast.show(res.message)
+        }).catch(err => isLoading(false))
     }
+    const genButton = () => {
+        let buttons = [];
+        const status = params.status;
+        const role = params.role;
+
+        if ((status == 'dipesan' || status == 'diterima') && role == 'pelanggan')
+            return [<TouchableOpacity key="batal" onPress={() => sendData('batal')} style={{ backgroundColor: '#EEEEEE', width: 70, justifyContent: 'center', borderRadius: 25, paddingVertical: 5, position: 'absolute', left: '42%', bottom: -15, borderBottomColor: '#BDC7C9', borderBottomWidth: 1, borderLeftColor: '#BDC7C9', borderLeftWidth: 1, borderRightColor: '#BDC7C9', borderRightWidth: 1 }}>
+                <Text style={{ color: colors.danger, textAlign: 'center' }} >Batalkan</Text>
+            </TouchableOpacity>]
+
+
+        if (role == 'penjahit') {
+            switch (status) {
+                case "dipesan":
+                    buttons.push(<TouchableOpacity key="terima" onPress={() => sendData('diterima')} style={{ backgroundColor: '#EEEEEE', width: 70, justifyContent: 'center', borderRadius: 25, paddingVertical: 5, position: 'absolute', left: '25%', bottom: -15, borderBottomColor: '#BDC7C9', borderBottomWidth: 1, borderLeftColor: '#BDC7C9', borderLeftWidth: 1, borderRightColor: '#BDC7C9', borderRightWidth: 1 }}>
+                        <Text style={{ color: colors.success, textAlign: 'center' }} >Terima</Text>
+                    </TouchableOpacity>);
+
+                    buttons.push(
+                        <TouchableOpacity key="tolak" onPress={() => sendData('tolak')} style={{ backgroundColor: '#EEEEEE', width: 70, justifyContent: 'center', borderRadius: 25, paddingVertical: 5, position: 'absolute', left: '65%', bottom: -15, borderBottomColor: '#BDC7C9', borderBottomWidth: 1, borderLeftColor: '#BDC7C9', borderLeftWidth: 1, borderRightColor: '#BDC7C9', borderRightWidth: 1 }}>
+                            <Text style={{ color: colors.danger, textAlign: 'center' }} >Tolak</Text>
+                        </TouchableOpacity>
+                    );
+
+                    break;
+                case "diterima":
+                    buttons.push
+                        (
+                            <TouchableOpacity key="kerjakan" onPress={() => sendData('dikerjakan')} style={{ backgroundColor: '#EEEEEE', width: 70, justifyContent: 'center', borderRadius: 25, paddingVertical: 5, position: 'absolute', left: '42%', bottom: -15, borderBottomColor: '#BDC7C9', borderBottomWidth: 1, borderLeftColor: '#BDC7C9', borderLeftWidth: 1, borderRightColor: '#BDC7C9', borderRightWidth: 1 }}>
+                                <Text style={{ color: colors.success, textAlign: 'center' }} >Kerjakan</Text>
+                            </TouchableOpacity>
+                        );
+                    break;
+
+                case "dikerjakan":
+                    buttons.push
+                        (
+                            <TouchableOpacity key="selesai" onPress={() => sendData('selesai')} style={{ backgroundColor: '#EEEEEE', width: 70, justifyContent: 'center', borderRadius: 25, paddingVertical: 5, position: 'absolute', left: '42%', bottom: -15, borderBottomColor: '#BDC7C9', borderBottomWidth: 1, borderLeftColor: '#BDC7C9', borderLeftWidth: 1, borderRightColor: '#BDC7C9', borderRightWidth: 1 }}>
+                                <Text style={{ color: colors.success, textAlign: 'center' }} >Selesai</Text>
+                            </TouchableOpacity>
+                        );
+                    break
+
+            }
+        }
+
+        return buttons
+    }
+    const buttons = genButton();
 
     return (
         <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -78,25 +124,56 @@ const DetailPesanan = ({ route, navigation }) => {
             <View style={{ backgroundColor: '#126E82', paddingVertical: 30 }}>
                 <Image style={{ alignSelf: 'center', width: 80, height: 80, borderRadius: 50, borderColor: 'white', borderWidth: 1 }} source={{ uri: Utils.imagePath(params.poto) }} />
                 <Text style={{ color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginTop: 15 }}>{params.nama_lengkap.toUpperCase()}</Text>
-                <Text style={{ color: 'white', textAlign: 'center', fontSize: 15, marginBottom: 30 }}>{params.penjahit}</Text>
+                <Text style={{ color: 'white', textAlign: 'center', fontSize: 15, marginBottom: 30 }}>{params.role == 'penjahit' ? params.pemesan : params.penjahit}</Text>
             </View>
 
             <View style={[styles.simpleMenu, styles.shadow]}>
                 <Text style={{ color: '#393E46', fontSize: 24, fontWeight: 'bold', textAlign: 'center' }}>Status Pesanan</Text>
-                <Text style={{ color: colors.disable, fontSize: 17, textAlign: 'center' }}>{Utils.capitalize(params.status)}</Text>
-                <TouchableOpacity onPress={sendData} style={{ backgroundColor: '#EEEEEE', width: 70, justifyContent: 'center', borderRadius: 25, paddingVertical: 5, position: 'absolute', left: '42%', bottom: -15, borderBottomColor: '#BDC7C9', borderBottomWidth: 1, borderLeftColor: '#BDC7C9', borderLeftWidth: 1, borderRightColor: '#BDC7C9', borderRightWidth: 1 }}>
-                    <Text style={{ color: colors.danger, textAlign: 'center' }} >Batalkan</Text>
-                </TouchableOpacity>
+                <Text style={{ color: colors.disable, fontSize: 17, textAlign: 'center' }}>{mapStatus[params.status]}</Text>
+                {
+                    buttons
+                }
             </View>
             {/* <ModalEl styles={{height: 70}} subtitle={"Toko " + params.username} title={"Pesanan Saya"} open={openModal} openModal={setOpenModal} type="list_element" modalData={MenuPesanan} /> */}
             <View style={{ backgroundColor: '#F6F6F6', marginTop: -25, borderTopRightRadius: 20, borderTopLeftRadius: 30 }}>
-                <View style={{ marginTop: 50 }}>
+                <View style={{ marginTop: 70 }}>
                     <View style={{ marginHorizontal: 25, marginVertical: 35 }}>
-                        <Text style={{ color: '#6B778D', fontWeight: 'bold', fontSize: 17 }}>Detail Pesanan</Text>
+                        <Text style={{ color: '#6B778D', fontWeight: 'bold', fontSize: 17 }}>Detail Pesanan <Text style={{fontSize: 13, color: colors.disable}}>Id: {params.id}</Text></Text>
                         <View style={{ ...styles.shadow, paddingVertical: 25, paddingHorizontal: 20, borderRadius: 10, backgroundColor: 'white', flex: 1, marginTop: 10 }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
-                                <Text style={{ color: '#393E46' }}>Nama Pemesan</Text>
-                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >Fathurrahman</Text>
+                                <Text style={{ color: '#393E46' }}>Tanggal Pesan</Text>
+                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{params.dibuat.substr(0, 10)}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
+                                <Text style={{ color: '#393E46' }}>Tanggal Pesan</Text>
+                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{params.dibuat.substr(0, 10)}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
+                                <Text style={{ color: '#393E46' }}>Bahan Yang digunakan</Text>
+                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{Utils.capitalize(params.bahan)}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
+                                <Text style={{ color: '#393E46' }}>Sumber bahan</Text>
+                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{params.bahan_sendiri == 1 ? "Dibawa sendiri" : "Disediakan penjahit"}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
+                                <Text style={{ color: '#393E46' }}>Model Yang akan dibuat</Text>
+                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{Utils.capitalize(params.model)}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
+                                <Text style={{ color: '#393E46' }}>Bahan Yang digunakan</Text>
+                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{Utils.capitalize(params.bahan)}</Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+                <View style={{ marginTop: 10 }}>
+                    <View style={{ marginHorizontal: 25, marginVertical: 35 }}>
+                        <Text style={{ color: '#6B778D', fontWeight: 'bold', fontSize: 17 }}>{params.role == 'pelanggan' ? "Detail Penjahit" : "Detail Pemesan"} <Text style={{fontSize: 13, color: colors.disable}}> {params.role == 'pelanggan' ? "Nama Toko: " + params.penjahit : "Username: " + params.pemesan}</Text></Text>
+                        <View style={{ ...styles.shadow, paddingVertical: 25, paddingHorizontal: 20, borderRadius: 10, backgroundColor: 'white', flex: 1, marginTop: 10 }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
+                                <Text style={{ color: '#393E46' }}>{params.role == 'pelanggan' ? 'Nama Penjahit' : 'Nama Pemesan'}</Text>
+                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{params.nama_lengkap}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
                                 <Text style={{ color: '#393E46' }}>Nomor Hp</Text>
@@ -122,30 +199,7 @@ const DetailPesanan = ({ route, navigation }) => {
                                 <Text style={{ color: '#393E46' }}>Alamat Lengkap</Text>
                                 <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{params.alamat}</Text>
                             </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
-                                <Text style={{ color: '#393E46' }}>Tanggal Pesan</Text>
-                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{params.dibuat.substr(0, 10)}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
-                                <Text style={{ color: '#393E46' }}>Tanggal Pesan</Text>
-                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{params.dibuat.substr(0, 10)}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
-                                <Text style={{ color: '#393E46' }}>Bahan Yang digunakan</Text>
-                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{Utils.capitalize(params.bahan)}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
-                                <Text style={{ color: '#393E46' }}>Sumber bahan</Text>
-                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{params.bahan_sendiri == 1 ? "Dibawa sendiri" : "Disediakan penjahit"}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
-                                <Text style={{ color: '#393E46' }}>Model Yang akan dibuat</Text>
-                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{Utils.capitalize(params.model)}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
-                                <Text style={{ color: '#393E46' }}>Bahan Yang digunakan</Text>
-                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{Utils.capitalize(params.bahan)}</Text>
-                            </View>
+                            
                         </View>
                     </View>
                 </View>

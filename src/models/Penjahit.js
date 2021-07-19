@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwtDecode from 'jwt-decode';
+import Utils from '../components/atoms/Utils/func';
 import { colors } from '../utils';
 import Auth from './Auth';
 
@@ -58,7 +59,7 @@ const PenjahitModel = {
             },
             body: JSON.stringify({
                 penjahit: penjahit,
-                pemesan: null
+                pemesan: user.username
             })
         }).then(res => res.json()).then(res => res).catch(err => console.log(err))
         let output = {
@@ -108,6 +109,32 @@ const PenjahitModel = {
         }).catch(err => console.log(err))
         
         return data;
+    },
+
+    pesananPembeli: async ()=>{
+        const pembeli = await Auth.loadData();
+        let data = await fetch('https://penjahit.kamscodelab.tech/pesanan/pelanggan?usr=' + pembeli.username).then(res => res.json()).then(res => res);
+        const keys=Object.keys(data);
+        let out = {
+            semua: [],
+            selesai: []
+        }
+        if(keys.length == 1 && keys[0] == 'type')
+            return out
+        else{
+           
+           keys.forEach(k => {
+               if(k != "type"){
+                    out.semua.push(data[k]);
+                    if(data[k].status == 'selesai')
+                        out.selesai.push(data[k])
+               }
+           }) 
+
+           return out;
+        }
+            
+        
     }
 };
 

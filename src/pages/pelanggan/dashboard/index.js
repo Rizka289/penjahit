@@ -17,7 +17,7 @@ const DashbordPelanggan = ({ navigation }) => {
     const [profile, setProfile] = useState({})
 
     useEffect(async () => {
-        BackHandler.addEventListener('hardwareBackPress', async () => await Auth.mustLogin(navigation))
+        BackHandler.addEventListener('hardwareBackPress', () => false)
         const data = await Auth.loadData()
         const penjahit = await PenjahitModel.getAllPenjahit();
         const tmp = { ...data, penjahit: penjahit }

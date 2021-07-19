@@ -28,10 +28,11 @@ const Router = () => {
       <Stack.Screen
         name="Pelanggan" component={DashbordPelanggan}
         options={(nav) => ({
-          title: "Consuo",
+          title: "Mau Jahit",
           headerStyle: {
             backgroundColor: colors.default,
           },
+          headerLeft: null,
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontWeight: 'bold',
@@ -43,7 +44,9 @@ const Router = () => {
       <Stack.Screen
         name="Penjahit" component={DashboardPenjahit}
         options={(nav) => ({
-          title: "Consuo",
+          // headerShown: false,
+          headerLeft: null,
+          title: "Mau Jahit",
           headerStyle: {
             backgroundColor: colors.default,
           },
@@ -96,6 +99,9 @@ const Router = () => {
       />
          <Stack.Screen
         name="UploadImage"
+        options={{
+          title:"Upload Poto Profile"
+        }}
         component={UploadImage}
         
       />

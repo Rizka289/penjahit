@@ -14,36 +14,44 @@ import ModalEl from '../../../components/atoms/Utils/Modal'
 
 const Pesanan = ({ route, navigation }) => {
     const params = route.params;
-    const [open, openModal] = useState(true);
     const [freload, isReload] = useState(false);
     const [pesanan, setPesanan] = useState({ success: true, message: null, data: { selesai: [], semua: [] }, el: { semua: [], selesai: [] } });
     const [loading, isLoading] = useState(true);
     const potoProfile = "https://penjahit.kamscodelab.tech/public/img/profile/" + params.poto
     useEffect(async () => {
         isLoading(true)
-        const p = await Uihelper.daftarPesanan(params).catch(err => isLoading(false));
-        if (p.success)
-            setPesanan(p);
-        isLoading(false)
+        const p = await Uihelper.daftarPesanan().then(res => {
+            if (res.success)
+                setPesanan(res);
+            isLoading(false)
+        }).catch(err => isLoading(false));
+
 
     }, [freload]);
-
+    const mapStatus = {
+        'dipesan': 'Dipesan',
+        'diterima': 'Pesanan Diterima',
+        'dikerjakan': 'Pesanan sedang dikerjakan',
+        'batal': 'Dibatalkan',
+        'tolak': 'Ditolak', 
+        'selesai': 'Selesai'
+    }
     const elSemuaPesanan = [];
     const elSelesaiPesanan = [];
 
     if (pesanan.data.semua.length > 0) {
         pesanan.data.semua.forEach(v => {
             elSemuaPesanan.push(
-                <TouchableOpacity onPress={() => navigation.navigate("DetailPesanan", v)} style={{ justifyContent: 'space-between', flexDirection: 'row', borderBottomColor: '#E1E5EA', borderBottomWidth: 2, height: 80, alignItems: 'center' }} key={v.id}>
+                <TouchableOpacity onPress={() => navigation.navigate("DetailPesanan", { ...v, role: params.role })} style={{ justifyContent: 'space-between', flexDirection: 'row', borderBottomColor: '#E1E5EA', borderBottomWidth: 2, height: 80, alignItems: 'center' }} key={v.id}>
                     <View style={{ flexDirection: 'row' }}>
                         <Image style={{ width: 40, height: 40, borderRadius: 50, borderColor: '#E1E5EA', borderWidth: 1 }} source={{ uri: Utils.imagePath(v.poto) }} />
                         <View>
                             <Text style={{ marginLeft: 10, fontSize: 15, color: '#45526C' }}>{v.nama_lengkap}</Text>
-                            <Text style={{ marginLeft: 10, fontSize: 12, color: colors.disable }}>{v.penjahit}</Text>
+                            <Text style={{ marginLeft: 10, fontSize: 12, color: colors.disable }}>{params.role == 'penjahit' ? v.pemesan : v.penjahit}</Text>
                         </View>
                     </View>
                     <View style={{}}>
-                        <Text style={{ marginRight: 10, fontSize: 17, color: '#45526C' }}>{v.status}</Text>
+                        <Text style={{ marginRight: 10, fontSize: 17, color: '#45526C' }}>{mapStatus[v.status]}</Text>
                         <Text style={{ marginRight: 10, fontSize: 12, color: '#45526C' }}>{v.dibuat.substr(0, 10)}</Text>
                     </View>
                 </TouchableOpacity>
@@ -55,16 +63,16 @@ const Pesanan = ({ route, navigation }) => {
     if (pesanan.data.selesai.length > 0) {
         pesanan.data.selesai.forEach(v => {
             elSelesaiPesanan.push(
-                <TouchableOpacity onPress={() => navigation.navigate("DetailPesanan", v)} style={{ justifyContent: 'space-between', flexDirection: 'row', borderBottomColor: '#E1E5EA', borderBottomWidth: 2, height: 80, alignItems: 'center' }} key={v.id + i}>
+                <TouchableOpacity onPress={() => navigation.navigate("DetailPesanan", { ...v, role: params.role })} style={{ justifyContent: 'space-between', flexDirection: 'row', borderBottomColor: '#E1E5EA', borderBottomWidth: 2, height: 80, alignItems: 'center' }} key={v.id}>
                     <View style={{ flexDirection: 'row' }}>
                         <Image style={{ width: 40, height: 40, borderRadius: 50, borderColor: '#E1E5EA', borderWidth: 1 }} source={{ uri: Utils.imagePath(v.poto) }} />
                         <View>
                             <Text style={{ marginLeft: 10, fontSize: 15, color: '#45526C' }}>{v.nama_lengkap}</Text>
-                            <Text style={{ marginLeft: 10, fontSize: 12, color: colors.disable }}>{v.penjahit}</Text>
+                            <Text style={{ marginLeft: 10, fontSize: 12, color: colors.disable }}>{params.role == 'penjahit' ? v.pemesan : v.penjahit}</Text>
                         </View>
                     </View>
                     <View style={{}}>
-                        <Text style={{ marginRight: 10, fontSize: 17, color: '#45526C' }}>{v.status}</Text>
+                        <Text style={{ marginRight: 10, fontSize: 17, color: '#45526C' }}>{mapStatus[v.status]}</Text>
                         <Text style={{ marginRight: 10, fontSize: 12, color: '#45526C' }}>{v.dibuat.substr(0, 10)}</Text>
                     </View>
                 </TouchableOpacity>

@@ -10,6 +10,7 @@ import { FlatGrid } from "react-native-super-grid"
 import PenjahitModel from "../../../models/Penjahit"
 import { colors } from "../../../utils"
 import Spinner from 'react-native-loading-spinner-overlay';
+import Utils from "../../../components/atoms/Utils/func"
 
 const FormPesan = ({ route, navigation }) => {
     const [loading, isLoading] = useState(false);
@@ -26,6 +27,8 @@ const FormPesan = ({ route, navigation }) => {
         bahan_sendiri: true,
         penjahit: params.username
     });
+
+    console.log("P\n",params);
 
     const sendData = async () => {
         isLoading(true);
@@ -46,17 +49,17 @@ const FormPesan = ({ route, navigation }) => {
 
     const stepList = [
         {
-            content: <KategoriModel body={body} setBody={setBody} />,
+            content: <KategoriModel kategori={Utils.isEmpty(params.portofolio) || Utils.isEmpty(params.portofolio.model) ? [] : params.portofolio.model.split(";")} body={body} setBody={setBody} />,
         },
         {
-            content: <KategoriBahan body={body} setBody={setBody} />,
+            content: <KategoriBahan kategori={Utils.isEmpty(params.portofolio) || Utils.isEmpty(params.portofolio.bahan) ? [] : params.portofolio.bahan.split(";")} body={body} setBody={setBody} />,
         },
         {
             content: <View >
                 <Text>Pilih salah satu</Text>
                 <FlatGrid
                     itemDimension={130}
-                    data={[
+                    data={Utils.isEmpty(params.portofolio) || Utils.isEmpty(params.portofolio.menyediakan_bahan) || params.portofolio.menyediakan_bahan == 1 ? [
                         {
                             text: "Bawa bahan sendiri",
                             value: true
@@ -65,7 +68,13 @@ const FormPesan = ({ route, navigation }) => {
                             text: "Bahan dari penjahit",
                             value: false
                         },
-                    ]}
+                    ] : params.portofolio.menyediakan_bahan == 0 ? [
+                        {
+                            text: "Bawa bahan sendiri",
+                            value: true
+                        },
+                    ] : []
+                }
                     style={styles.gridView}
                     spacing={10}
                     renderItem={({ item }) => (

@@ -8,6 +8,7 @@ import CircleButton from "../../components/atoms/Button/CircleButton";
 import Utils from "../../components/atoms/Utils/func";
 import ActionBttuon from "../../components/atoms/Button/ActionButton";
 import Auth from "../../models/Auth";
+import Uihelper from "../../models/Uihelper";
 
 
 const Section = ({ button = null, option = {}, items = [], onPress = () => { }, style = {} }) => {
@@ -17,11 +18,6 @@ const Section = ({ button = null, option = {}, items = [], onPress = () => { }, 
         option.onAddClicked = () => { }
     if (option.isNodata)
         option.height = 120;
-
-    // useEffect(async () => {
-    //     // BackHandler.addEventListener('hardwareBackPress', async () => await Auth.mustLogin(navigation))
-
-    // }, [])    
     return (
         <View style={{ ...{ marginHorizontal: 25, marginVertical: 20 }, ...style }}>
             <Text style={{ color: '#6B778D', fontWeight: 'bold', fontSize: 17 }}>{option.section_name}</Text>
@@ -38,45 +34,68 @@ const Section = ({ button = null, option = {}, items = [], onPress = () => { }, 
     )
 }
 
-const CardPenjahit = ({ }) => {
-    const [modalSemuaPesanan, openModalSemuaPesanan] = useState(false);
-    const [modalPesananSelesai, openModalPesananSelesai] = useState(false);
+const CardPenjahit = ({ navigation, params }) => {
+    const [pesanan, setPesanan] = useState({
+        semua: [],
+        selesai: []
+    })
 
+    useEffect(async () => {
+        const res = await Uihelper.daftarPesanan(params);
+        setPesanan(res.data);
+    })
     return (
         <View style={[styles.simpleMenu, styles.shadow]}>
-            <TouchableOpacity onPress={() => openModalSemuaPesanan(true)} >
+            <View >
                 <Text style={{ color: '#393E46', textAlign: 'center' }}>Semua Pesanan</Text>
-                <Text style={{ color: '#393E46', textAlign: 'center' }}>12/100</Text>
-            </TouchableOpacity >
-            <TouchableOpacity onPress={() => openModalPesananSelesai(true)}>
-                <Text style={{ color: '#393E46', textAlign: 'center' }}>Belum Selesai</Text>
-                <Text style={{ color: '#393E46', textAlign: 'center' }}>0</Text>
+                <Text style={{ color: '#393E46', textAlign: 'center' }}>{pesanan.selesai.length} / {pesanan.semua.length}</Text>
+            </View >
+            <View>
+                <Text style={{ color: '#393E46', textAlign: 'center' }}>Selesai</Text>
+                <Text style={{ color: '#393E46', textAlign: 'center' }}>{pesanan.selesai.length}</Text>
+            </View>
+            <TouchableOpacity onPress={() => navigation.navigate("Pesanan", { ...params, pesanan: pesanan })} style={{ backgroundColor: '#DDDDDD', paddingVertical: 5, paddingHorizontal: 10, borderRadius: 10, shadowColor: '#000', shadowRadius: 10, elevation: 5, position: 'absolute', bottom: -10, left: '35%' }}>
+                <Text style={{ color: '#706897', textAlign: 'center' }}>Lihat Pesanan</Text>
             </TouchableOpacity>
-            {/* <ModalEl subtitle={"Toko " + params.username} title={"Semua Pesanan"} open={modalSemuaPesanan} openModal={openModalSemuaPesanan} type="list_element" modalData={elementPesananSaya} />
-            <ModalEl subtitle={"Toko " + params.username} title={""} open={modalPesananSelesai} openModal={openModalPesananSelesai} type="list_element" modalData={elementPesananSaya} /> */}
         </View>
     )
 }
 
-const CardPembeli = ({ openModalSemuaPesanan, openModalPesananSelesai }) => (
-    <View style={[styles.simpleMenu, styles.shadow]}>
-        <TouchableOpacity onPress={() => openModalSemuaPesanan(true)} >
-            <Text style={{ color: '#393E46', textAlign: 'center' }}>Semua Pesanan</Text>
-            <Text style={{ color: '#393E46', textAlign: 'center' }}>12/100</Text>
-        </TouchableOpacity >
-        <TouchableOpacity onPress={() => openModalPesananSelesai(true)}>
-            <Text style={{ color: '#393E46', textAlign: 'center' }}>Belum Selesai</Text>
-            <Text style={{ color: '#393E46', textAlign: 'center' }}>0</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{backgroundColor: '#DDDDDD', paddingVertical: 5,paddingHorizontal: 10, borderRadius: 10, shadowColor: '#000', shadowRadius: 10,elevation: 5, position: 'absolute', bottom: -10, left: '35%'}}>
-            <Text style={{ color: '#706897', textAlign: 'center' }}>Lihat Pesanan</Text>
-        </TouchableOpacity>
-    </View>
-);
+const CardPembeli = ({ openModalSemuaPesanan, openModalPesananSelesai, params, navigation }) => {
+    const [pesanan, setPesanan] = useState({
+        semua: [],
+        selesai: []
+    })
+
+    useEffect(async () => {
+        const res = await Uihelper.daftarPesanan(params);
+        setPesanan(res.data);
+    })
+    return (
+
+        <View style={[styles.simpleMenu, styles.shadow]}>
+            <View >
+                <Text style={{ color: '#393E46', textAlign: 'center' }}>Semua Pesanan</Text>
+                <Text style={{ color: '#393E46', textAlign: 'center' }}>{pesanan.selesai.length} / {pesanan.semua.length}</Text>
+            </View >
+            <View>
+                <Text style={{ color: '#393E46', textAlign: 'center' }}>Selesai</Text>
+                <Text style={{ color: '#393E46', textAlign: 'center' }}>{pesanan.selesai.length}</Text>
+            </View>
+            <TouchableOpacity onPress={() => navigation.navigate("Pesanan", { ...params, pesanan: pesanan })} style={{ backgroundColor: '#DDDDDD', paddingVertical: 5, paddingHorizontal: 10, borderRadius: 10, shadowColor: '#000', shadowRadius: 10, elevation: 5, position: 'absolute', bottom: -10, left: '35%' }}>
+                <Text style={{ color: '#706897', textAlign: 'center' }}>Lihat Pesanan</Text>
+            </TouchableOpacity>
+        </View>
+    )
+};
 
 const Profile = ({ route, navigation }) => {
-    const params = route.params;
+    const [params, setParams] = useState(route.params)
     const potoProfile = "https://penjahit.kamscodelab.tech/public/img/profile/" + params.poto
+    useEffect(async () => {
+        const data = await Auth.loadData();
+        setParams({ ...params, ...data })
+    }, [])
 
     const key_mapping_profile = {
         alamat: ["Alamat"],
@@ -96,7 +115,6 @@ const Profile = ({ route, navigation }) => {
     }
     const profile = [];
     const keahlian = [];
-    console.log("PArams \n", params);
     Object.keys(params).forEach(k => {
         if (k != 'portofolio' && key_mapping_profile[k]) {
             const tmp = {
@@ -141,7 +159,7 @@ const Profile = ({ route, navigation }) => {
         <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={{ backgroundColor: '#7C83FD', paddingVertical: 30 }}>
                 <Image style={{ alignSelf: 'center', width: 80, height: 80, borderRadius: 50, borderColor: 'white', borderWidth: 1 }} source={{ uri: potoProfile }} />
-                <TouchableOpacity onPress={() => navigation.navigate("UploadImage")} style={{ position: 'absolute', top: '45%', left: '50%' , backgroundColor: 'rgba(0,0,0, 0.2)', width: 40, height: 40, borderRadius: 50, justifyContent: 'center', alignItems: 'center'}} >
+                <TouchableOpacity onPress={() => navigation.navigate("UploadImage", params)} style={{ position: 'absolute', top: '45%', left: '50%', backgroundColor: 'rgba(0,0,0, 0.2)', width: 40, height: 40, borderRadius: 50, justifyContent: 'center', alignItems: 'center' }} >
                     <Image style={{ width: 35, height: 35 }} source={camera} />
                 </TouchableOpacity>
                 <Text style={{ color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginTop: 15 }}>{params.nama_lengkap.toUpperCase()}</Text>
@@ -149,7 +167,7 @@ const Profile = ({ route, navigation }) => {
             </View>
 
             {
-                params.role == 'penjahit' ? <CardPenjahit /> : <CardPembeli />
+                params.role == 'penjahit' ? <CardPenjahit params={params} navigation={navigation} /> : <CardPembeli params={params} navigation={navigation} />
             }
 
             <View style={{ backgroundColor: '#F6F6F6', marginTop: -25, borderTopRightRadius: 30, borderTopLeftRadius: 30 }}>
