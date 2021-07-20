@@ -1,12 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import { View, Image, Text, StyleSheet, TouchableOpacity, Modal, Pressable } from "react-native";
+import { View, Image, Text, StyleSheet, TouchableOpacity, Modal, Pressable, BackHandler } from "react-native";
 import Auth from "../../../models/Auth";
 import { colors } from "../../../utils";
-const ProfileAvatar = ({navigation} ) => {
+const ProfileAvatar = ({ navigation }) => {
     const [profileMenu, isOpenMenu] = useState(false);
     const [params, setParams] = useState({});
     useEffect(async () => {
+        BackHandler.addEventListener('hardwareBackPress', async () => {
+            const data = await Auth.loadData();
+            setParams(data);
+            return false;
+        });
         const data = await Auth.loadData();
         setParams(data);
     }, [])
@@ -35,9 +40,9 @@ const ProfileAvatar = ({navigation} ) => {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text onPress={() => {navigation.navigate('Profile', params); isOpenMenu(false)}} style={styles.modalText}>My Profile</Text>
-                        <Text style={styles.modalText} onPress={() => {navigation.navigate("Pesanan", params); isOpenMenu(false)}}>Pesanan</Text>
-                        <Text onPress={() => {Auth.logOut(navigation), isOpenMenu(false)}} style={styles.modalText}>Keluar</Text>
+                        <Text onPress={() => { navigation.navigate('Profile', params); isOpenMenu(false) }} style={styles.modalText}>My Profile</Text>
+                        <Text style={styles.modalText} onPress={() => { navigation.navigate("Pesanan", params); isOpenMenu(false) }}>Pesanan</Text>
+                        <Text onPress={() => { Auth.logOut(navigation), isOpenMenu(false) }} style={styles.modalText}>Keluar</Text>
                         <Pressable
                             style={[styles.button, styles.buttonClose]}
                             onPress={() => isOpenMenu(false)}
@@ -65,7 +70,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 0,
         bottom: 2,
-        
+
     },
     tinyLogo: {
         borderRadius: 50,
@@ -82,8 +87,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginTop: 22
-      },
-      modalView: {
+    },
+    modalView: {
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
@@ -91,31 +96,31 @@ const styles = StyleSheet.create({
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
-          width: 0,
-          height: 2
+            width: 0,
+            height: 2
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5
-      },
-      button: {
+    },
+    button: {
         borderRadius: 20,
         padding: 10,
         elevation: 2
-      },
-      buttonOpen: {
+    },
+    buttonOpen: {
         backgroundColor: "#F194FF",
-      },
-      buttonClose: {
+    },
+    buttonClose: {
         backgroundColor: "#2196F3",
-      },
-      textStyle: {
+    },
+    textStyle: {
         color: "white",
         fontWeight: "bold",
         textAlign: "center"
-      },
-      modalText: {
+    },
+    modalText: {
         marginBottom: 15,
         textAlign: "center"
-      }
+    }
 });

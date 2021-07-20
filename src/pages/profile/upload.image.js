@@ -6,6 +6,7 @@ import Auth from '../../models/Auth';
 import * as ImagePicker from "react-native-image-picker"
 import Toast from 'react-native-simple-toast'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Utils from '../../components/atoms/Utils/func';
 
 
 const UploadImage = ({route, navigation}) => {
@@ -46,7 +47,7 @@ const UploadImage = ({route, navigation}) => {
                await AsyncStorage.removeItem('_token_');
                Auth.saveToken(res.token);
                setTimeout(() => {
-                    navigation.replace("Profile", {...params, poto: res.image})
+                    navigation.replace(Utils.capitalize(params.role), {...params, poto: res.image})
                }, 2000)
             }
         }).catch(err => console.log(err))

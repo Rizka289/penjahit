@@ -19,6 +19,10 @@ const Uihelper = {
 
     daftarPesanan: async () => {
         const usr = await Auth.loadData();
+        const token = await Auth.loadToken();
+
+        console.log("USR", usr);
+        console.log("TOKEN", token);
         let url = "https://penjahit.kamscodelab.tech/pesanan/" + usr.role + "?usr=" + Utils.replaceAll(usr.username, " ", "+");
         const res = await fetch(url).then(res => res.json()).then(res => res).catch((e) => console.log(e));
         let output = {

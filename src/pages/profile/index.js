@@ -43,7 +43,7 @@ const CardPenjahit = ({ navigation, params }) => {
     useEffect(async () => {
         const res = await Uihelper.daftarPesanan(params);
         setPesanan(res.data);
-    })
+    }, [])
     return (
         <View style={[styles.simpleMenu, styles.shadow]}>
             <View >
@@ -70,7 +70,7 @@ const CardPembeli = ({ openModalSemuaPesanan, openModalPesananSelesai, params, n
     useEffect(async () => {
         const res = await Uihelper.daftarPesanan(params);
         setPesanan(res.data);
-    })
+    }, [])
     return (
 
         <View style={[styles.simpleMenu, styles.shadow]}>
@@ -91,7 +91,6 @@ const CardPembeli = ({ openModalSemuaPesanan, openModalPesananSelesai, params, n
 
 const Profile = ({ route, navigation }) => {
     const [params, setParams] = useState(route.params)
-    const potoProfile = "https://penjahit.kamscodelab.tech/public/img/profile/" + params.poto
     useEffect(async () => {
         const data = await Auth.loadData();
         setParams({ ...params, ...data })
@@ -158,7 +157,7 @@ const Profile = ({ route, navigation }) => {
     return (
         <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={{ backgroundColor: '#7C83FD', paddingVertical: 30 }}>
-                <Image style={{ alignSelf: 'center', width: 80, height: 80, borderRadius: 50, borderColor: 'white', borderWidth: 1 }} source={{ uri: potoProfile }} />
+                <Image style={{ alignSelf: 'center', width: 80, height: 80, borderRadius: 50, borderColor: 'white', borderWidth: 1 }} source={{ uri: "https://penjahit.kamscodelab.tech/public/img/profile/" + params.poto }} />
                 <TouchableOpacity onPress={() => navigation.navigate("UploadImage", params)} style={{ position: 'absolute', top: '45%', left: '50%', backgroundColor: 'rgba(0,0,0, 0.2)', width: 40, height: 40, borderRadius: 50, justifyContent: 'center', alignItems: 'center' }} >
                     <Image style={{ width: 35, height: 35 }} source={camera} />
                 </TouchableOpacity>

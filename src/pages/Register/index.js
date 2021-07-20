@@ -97,7 +97,7 @@ const Register = ({ navigation }) => {
           <Text style={styles.form.label}>Daftar Sebagai</Text>
           <Picker selectedValue={body.role} onValueChange={v => setBody({ ...body, role: v })} style={styles.form.formControl} >
             <Picker.Item label="Pelanggan" value="pelanggan" />
-            <Picker.Item label="Penjaht" value="penjahit" />
+            <Picker.Item label="Penjahit" value="penjahit" />
           </Picker>
         </View>
         <View style={styles.form.formGroup}>
@@ -122,7 +122,7 @@ const Register = ({ navigation }) => {
         </View>
         <View style={styles.form.formGroup}>
           <Text style={styles.form.label}>Tangal Lahir</Text>
-          <DatePicker mode={'date'} date={new Date(body.tanggal_lahir)} androidVariant={'nativeAndroid'} onDateChange={(v) => setBody({ ...body, tanggal_lahir: v.getTime() })} />
+          <DatePicker textColor={colors.random()} fadeToColor={"none"} mode={'date'} date={new Date(body.tanggal_lahir)} androidVariant={'nativeAndroid'} onDateChange={(v) => setBody({ ...body, tanggal_lahir: v.getTime() })} />
         </View>
         <View style={styles.form.formGroup}>
           <Text style={styles.form.label}>Email</Text>
