@@ -13,7 +13,7 @@ const WelcomeAuth = ({navigation}) => {
   return (
     <View style={styles.wrapper.page}>
       <Image source={logo} style={styles.wrapper.ilustration} />
-      <Text style={styles.text.welcome}>Selamat Datang di Consuo Jahit</Text>
+      <Text style={styles.text.welcome}>Selamat Datang di Mau Jahit</Text>
       <ActionBttuon
         desc="Silahkan masuk, jika anda sudah memiliki akun"
         title="Masuk"

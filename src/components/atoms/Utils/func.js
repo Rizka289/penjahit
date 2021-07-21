@@ -27,7 +27,7 @@ const Utils = {
         return rupiah;
     }, 
     imagePath: (filename) =>  "https://penjahit.kamscodelab.tech/public/img/profile/" + filename,
-    isEmpty: (variabel) =>  variabel == undefined || variabel == null || variabel == "" || variabel == [] || variabel == {}
+    isEmpty: (variabel) =>  variabel == undefined || variabel == null || variabel == "" || Object.keys(variabel).length == 0
 }
 
 export default Utils;

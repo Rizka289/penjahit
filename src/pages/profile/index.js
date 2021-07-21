@@ -119,7 +119,7 @@ const Profile = ({ route, navigation }) => {
             const tmp = {
                 key: k,
                 title: key_mapping_profile[k][0],
-                value: key_mapping_profile[k][1] == undefined || key_mapping_profile[k][1] == {} ? params[k] : key_mapping_profile[k][1][params[k]]
+                value: key_mapping_profile[k][1] == undefined || Utils.isEmpty(key_mapping_profile[k][1]) ? params[k] : key_mapping_profile[k][1][params[k]]
             }
             if (k == 'alamat') {
                 if (tmp.value.length > 65)
@@ -183,15 +183,15 @@ const Profile = ({ route, navigation }) => {
                     />
                     {params.role == 'penjahit' ?
                         <Section button={
-                            params.portofolio == {} ?
-                                <TouchableOpacity onPress={() => navigation.navigate('UpdatePortofolio', params)} style={{ ...styles.shadow, width: 35, height: 35, justifyContent: 'center', borderRadius: 100, borderColor: 'lightgrey', borderWidth: 1, backgroundColor: 'white', position: 'absolute', top: '50%', left: '45%', zIndex: 10 }}>
+                           Utils.isEmpty(params.portofolio) ?
+                                <TouchableOpacity onPress={() => navigation.navigate('UpdatePortofolio', params)} style={{ ...styles.shadow, width: 35, height: 35, justifyContent: 'center', borderRadius: 100, borderColor: 'lightgrey', borderWidth: 1, backgroundColor: 'white', position: 'absolute', top: '80%', left: '45%', zIndex: 10 }}>
                                     <Text style={{ color: '#B2B1B9', fontSize: 24, textAlign: 'center' }}>+</Text>
                                 </TouchableOpacity> :
                                 <TouchableOpacity onPress={() => navigation.navigate('UpdatePortofolio', params)} style={{ ...styles.shadow, justifyContent: 'center', paddingHorizontal: 5, borderRadius: 10, borderColor: '#2C2E43', borderWidth: 1, backgroundColor: 'white', position: 'absolute', bottom: -20, right: '30%', zIndex: 10 }}>
                                     <Text style={{ color: '#B2B1B9', fontSize: 20, textAlign: 'center' }}>Edit Keahlian</Text>
                                 </TouchableOpacity>
                         }
-                            option={{ section_name: "Keahlian", isNodata: params.portofolio == {}, onAddClicked: () => console.log("ADD") }}
+                            option={{ section_name: "Keahlian", isNodata:Utils.isEmpty(params.portofolio), onAddClicked: () => console.log("ADD") }}
                             items={keahlian}
                             style={{ marginBottom: 100 }}
                         />

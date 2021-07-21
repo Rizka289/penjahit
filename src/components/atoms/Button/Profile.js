@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'center',
         borderColor: 'white',
-        borderStyle: "solid",
+        // borderStyle: "solid",
         borderWidth: 1,
     },
     centeredView: {

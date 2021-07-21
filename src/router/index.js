@@ -61,7 +61,7 @@ const Router = () => {
       <Stack.Screen
         name="PofilePenjahit" component={ProfilePenjual}
         options={(nav) => ({
-          title: "Consuo",
+          title: "Mau Jahit",
           headerStyle: {
             backgroundColor: colors.default,
           },
