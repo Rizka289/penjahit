@@ -101,7 +101,7 @@ const UpdateProfile = ({ route, navigation }) => {
                 </View>
                 <View style={styles.form.formGroup}>
                     <Text style={styles.form.label}>Tangal Lahir</Text>
-                    <DatePicker mode={'date'} date={new Date(body.tanggal_lahir)} androidVariant={'nativeAndroid'} onDateChange={(v) => setBody({ ...body, tanggal_lahir: v.getTime() })} />
+                    <DatePicker textColor={colors.random()} fadeToColor={"none"} mode={'date'} date={new Date(body.tanggal_lahir)} androidVariant={'nativeAndroid'} onDateChange={(v) => setBody({ ...body, tanggal_lahir: v.getTime() })} />
                 </View>
                 <View style={styles.form.formGroup}>
                     <Text style={styles.form.label}>Email</Text>

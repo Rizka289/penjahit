@@ -17,6 +17,28 @@ const Uihelper = {
         return res;
     },
 
+    pesananBaru: async () => {
+        
+        const usr = await Auth.loadData();
+        const token = await Auth.loadToken();
+        let url = "https://penjahit.kamscodelab.tech/pesanan/" + usr.role + "?usr=" + Utils.replaceAll(usr.username, " ", "+");
+        const res = await fetch(url).then(res => res.json()).then(res => res).catch((e) => []);
+        let output = [];
+
+        if(res.type == 'success'){
+            Object.keys(res).forEach(k => {
+                if(k == 'type')
+                    return
+                if(res[k].status == 'dipesan')
+                    output.push(res[k]);
+            })
+            output.message = null
+
+        }
+            
+
+        return output;
+    },
     daftarPesanan: async () => {
         const usr = await Auth.loadData();
         const token = await Auth.loadToken();
@@ -29,7 +51,7 @@ const Uihelper = {
             success: res.type == "success",
             data: {
                 semua: [],
-                selesai: []
+                selesai: [],
             }
         }
         if(res.type == 'success'){

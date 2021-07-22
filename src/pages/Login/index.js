@@ -56,7 +56,7 @@ const Login = ({ navigation }) => {
       <View style={{ marginHorizontal: '25%' }}>
         <ActionBttuon onPress={sendData} title="Login" />
       </View>
-      <Text style={{ marginHorizontal: 15 }} onPress={() => handleGoTo('Register')} >Lupa Password .?</Text>
+      <Text style={{ marginHorizontal: 15 }} onPress={() => handleGoTo('LupaPassword')} >Lupa Password .?</Text>
 
     </View>
   );

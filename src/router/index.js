@@ -13,6 +13,7 @@ import Portofilio from '../pages/profile/portofolio';
 import UploadImage from '../pages/profile/upload.image';
 import Pesanan from '../pages/pelanggan/pesanan/pesanan';
 import DetailPesanan from '../pages/pelanggan/pesanan/detail';
+import ResetPassword from '../pages/profile/reset.password';
 
 const Stack = createStackNavigator();
 
@@ -115,6 +116,11 @@ const Router = () => {
         component={DetailPesanan}
         options={{headerTransparent: true, title:""}}
       />
+      <Stack.Screen 
+        name = "LupaPassword"
+        component = {ResetPassword}
+        options={{headerTransparent: true, title:""}}
+        />
     </Stack.Navigator>
   );
 };

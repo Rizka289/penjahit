@@ -145,10 +145,6 @@ const DetailPesanan = ({ route, navigation }) => {
                                 <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{params.dibuat.substr(0, 10)}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
-                                <Text style={{ color: '#393E46' }}>Tanggal Pesan</Text>
-                                <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{params.dibuat.substr(0, 10)}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15, borderBottomWidth: 4, borderBottomColor: '#F6F6F6' }} >
                                 <Text style={{ color: '#393E46' }}>Bahan Yang digunakan</Text>
                                 <Text style={{ marginLeft: 25, color: '#B2B1B9' }} >{Utils.capitalize(params.bahan)}</Text>
                             </View>
