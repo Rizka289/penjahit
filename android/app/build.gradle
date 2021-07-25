@@ -147,10 +147,10 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+            storeFile file('../../kamscode.keystore')
+            storePassword '12345678'
+            keyAlias 'kamscode'
+            keyPassword '12345678'
         }
     }
     buildTypes {

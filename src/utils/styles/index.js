@@ -47,6 +47,7 @@ const styles = {
             marginLeft: 15,
             marginRight: 15,
             marginTop: 5,
+            color: 'black',
             marginBottom: 5,
         }
 

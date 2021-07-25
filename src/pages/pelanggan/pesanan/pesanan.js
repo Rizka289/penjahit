@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Image, ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
-import Auth from '../../../models/Auth';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { useEffect } from 'react/cjs/react.development';
 import Uihelper from '../../../models/Uihelper';
@@ -9,7 +8,6 @@ import { reload } from '../../../assets';
 import styles from '../../../utils/styles/index'
 import { colors } from '../../../utils/colors';
 import Utils from '../../../components/atoms/Utils/func';
-import ModalEl from '../../../components/atoms/Utils/Modal'
 
 
 const Pesanan = ({ route, navigation }) => {
@@ -20,11 +18,13 @@ const Pesanan = ({ route, navigation }) => {
     const potoProfile = "https://penjahit.kamscodelab.tech/public/img/profile/" + params.poto
     useEffect(async () => {
         isLoading(true)
-        const p = await Uihelper.daftarPesanan().then(res => {
+        await Uihelper.daftarPesanan().then(res => {
             if (res.success)
                 setPesanan(res);
             isLoading(false)
-        }).catch(err => isLoading(false));
+        }).catch(() => {
+            isLoading(false)
+        });
 
 
     }, [freload]);
@@ -33,7 +33,7 @@ const Pesanan = ({ route, navigation }) => {
         'diterima': 'Pesanan Diterima',
         'dikerjakan': 'Pesanan sedang dikerjakan',
         'batal': 'Dibatalkan',
-        'tolak': 'Ditolak', 
+        'tolak': 'Ditolak',
         'selesai': 'Selesai'
     }
     const elSemuaPesanan = [];

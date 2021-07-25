@@ -14,7 +14,7 @@ const ResetPassword = () => {
     const [body, setBody] = useState({
         email: ""
     })
-    const [success, setSuccess] = useState(false)
+    
     const sendData = async () => {
         isLoading(true);
         const res = await fetch('https://penjahit.kamscodelab.tech/reset', {

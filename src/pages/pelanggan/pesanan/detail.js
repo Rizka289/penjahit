@@ -1,7 +1,6 @@
-import { FlatList, Image, ScrollView, TouchableOpacity, StyleSheet, Text, View } from "react-native";
+import {Image, ScrollView, TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import { colors } from "../../../utils";
-import ModalEl from "../../../components/atoms/Utils/Modal";
 import Utils from "../../../components/atoms/Utils/func";
 import Spinner from "react-native-loading-spinner-overlay";
 import Auth from "../../../models/Auth";
@@ -48,7 +47,7 @@ const DetailPesanan = ({ route, navigation }) => {
     const sendData = async (action = 'batal') => {
         isLoading(true);
         const token = await Auth.loadToken()
-        const res = await fetch("https://penjahit.kamscodelab.tech/pesanan/status/", {
+        await fetch("https://penjahit.kamscodelab.tech/pesanan/status/", {
             method: "POST",
             headers: {
                 Accept: 'application/json',
@@ -62,7 +61,7 @@ const DetailPesanan = ({ route, navigation }) => {
                 params.status = action
             isLoading(false);
             Toast.show(res.message)
-        }).catch(err => isLoading(false))
+        }).catch(() => {isLoading(false)})
     }
     const genButton = () => {
         let buttons = [];

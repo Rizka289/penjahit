@@ -34,7 +34,7 @@ const Register = ({ navigation }) => {
   });
 
   useEffect(() => {
-    let url = "http://penjahit.kamscodelab.tech/uihelper/getwilayah?id=21.71&level=3";
+    let url = "https://penjahit.kamscodelab.tech/uihelper/getwilayah?id=21.71&level=3";
     fetch(url)
       .then(res => res.json())
       .then(res => {
