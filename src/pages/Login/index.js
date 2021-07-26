@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, TextInput } from 'react-native';
 import { logo } from '../../assets';
 import styles from '../../utils/styles';
 import ActionBttuon from '../../components/atoms/Button/ActionButton';
 import Auth from '../../models/Auth';
-import { useState } from 'react';
 import jwtDecode from 'jwt-decode';
 import Spinner from 'react-native-loading-spinner-overlay';
 

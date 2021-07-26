@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Button, Image, View } from 'react-native';
-import { useEffect } from 'react/cjs/react.development';
 import Auth from '../../models/Auth';
 import * as ImagePicker from "react-native-image-picker"
 import Toast from 'react-native-simple-toast'

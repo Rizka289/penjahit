@@ -1,7 +1,6 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Image, ScrollView, Text, TextInput, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { useState } from 'react/cjs/react.development';
 import { logo } from '../../assets';
 import ActionBttuon from '../../components/atoms/Button/ActionButton';
 import styles from '../../utils/styles';

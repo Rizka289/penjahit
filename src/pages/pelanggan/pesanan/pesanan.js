@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Image, ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import { useEffect } from 'react/cjs/react.development';
 import Uihelper from '../../../models/Uihelper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { reload } from '../../../assets';
